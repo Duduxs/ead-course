@@ -1,4 +1,4 @@
-package com.ead.course.domains
+package com.ead.course.core
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING

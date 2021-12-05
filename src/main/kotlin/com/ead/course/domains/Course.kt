@@ -1,5 +1,6 @@
 package com.ead.course.domains
 
+import com.ead.course.core.Auditable
 import com.ead.course.enums.CourseLevel
 import com.ead.course.enums.CourseStatus
 import java.util.UUID
