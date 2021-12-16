@@ -5,7 +5,14 @@ import com.ead.course.enums.CourseLevel
 import com.ead.course.enums.CourseStatus
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.FetchMode.SUBSELECT
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
+import org.hibernate.annotations.OnDeleteAction.CASCADE
 import java.util.UUID
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType.STRING
@@ -45,6 +52,7 @@ data class Course(
 
     @field:JsonProperty(access = WRITE_ONLY)
     @field:OneToMany(mappedBy = "course")
+    @field:Fetch(SUBSELECT)
     val modules: Set<Module> = HashSet(),
 
 ) : Auditable()

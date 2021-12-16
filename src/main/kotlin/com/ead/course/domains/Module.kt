@@ -3,6 +3,8 @@ package com.ead.course.domains
 import com.ead.course.core.Auditable
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode.SUBSELECT
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -33,6 +35,7 @@ data class Module(
 
     @field:JsonProperty(access = WRITE_ONLY)
     @field:OneToMany(mappedBy = "module")
+    @field:Fetch(SUBSELECT)
     val lessons: Set<Lesson> = HashSet()
 
 ) : Auditable()
