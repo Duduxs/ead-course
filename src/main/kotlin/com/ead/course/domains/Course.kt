@@ -1,18 +1,13 @@
 package com.ead.course.domains
 
-import com.ead.course.core.Auditable
+import com.ead.course.core.entities.Auditable
 import com.ead.course.enums.CourseLevel
 import com.ead.course.enums.CourseStatus
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY
 import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.FetchMode.SUBSELECT
-import org.hibernate.annotations.OnDelete
-import org.hibernate.annotations.OnDeleteAction
-import org.hibernate.annotations.OnDeleteAction.CASCADE
 import java.util.UUID
-import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType.STRING

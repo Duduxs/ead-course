@@ -1,4 +1,4 @@
-package com.ead.course.core
+package com.ead.course.core.entities
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING

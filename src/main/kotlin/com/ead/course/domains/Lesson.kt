@@ -1,6 +1,6 @@
 package com.ead.course.domains
 
-import com.ead.course.core.Auditable
+import com.ead.course.core.entities.Auditable
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY
 import java.util.UUID
