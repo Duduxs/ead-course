@@ -2,11 +2,14 @@ package com.ead.course.services
 
 import com.ead.course.domains.Course
 import com.ead.course.domains.Module
+import com.ead.course.dtos.CourseDTO
+import com.ead.course.mappers.toDTO
+import com.ead.course.mappers.toDomain
 import com.ead.course.repositories.CourseRepository
 import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CourseService(
@@ -29,4 +32,8 @@ class CourseService(
 
         courseRepository.delete(course)
     }
+
+    @Transactional
+    fun save(dto: CourseDTO) = courseRepository.save(dto.toDomain()).toDTO()
+
 }

@@ -24,7 +24,7 @@ data class Course(
 
     @field:Id
     @field:GeneratedValue(strategy = AUTO)
-    val id: UUID,
+    val id: UUID = UUID.randomUUID(),
 
     @field:Column(nullable = false, length = 150)
     val name: String,

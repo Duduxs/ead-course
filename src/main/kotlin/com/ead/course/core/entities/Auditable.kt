@@ -16,11 +16,11 @@ abstract class Auditable {
 
     @field:CreatedDate
     @field:JsonFormat(shape = STRING, pattern = "dd-MM-yyyy HH:mm:ss")
-    @field:Column(nullable = false)
-    private var creationDate: LocalDateTime = LocalDateTime.now()
+    @field:Column(nullable = false, updatable = false)
+    open var createdDate: LocalDateTime = LocalDateTime.now()
 
     @field:LastModifiedDate
     @field:JsonFormat(shape = STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @field:Column(nullable = false)
-    private val lastUpdateDate: LocalDateTime? = null
+    open var modifiedDate: LocalDateTime = LocalDateTime.now()
 }
