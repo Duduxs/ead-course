@@ -10,6 +10,7 @@ import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 
 @Service
 class CourseService(
@@ -17,6 +18,9 @@ class CourseService(
     private val moduleRepository: ModuleRepository,
     private val lessonRepository: LessonRepository,
 ) {
+
+    @Transactional
+    fun save(dto: CourseDTO) = courseRepository.save(dto.toDomain()).toDTO()
 
     @Transactional
     fun delete(course: Course) {
@@ -34,6 +38,7 @@ class CourseService(
     }
 
     @Transactional
-    fun save(dto: CourseDTO) = courseRepository.save(dto.toDomain()).toDTO()
-
+    fun delete(id: UUID) {
+        delete(courseRepository.findById(id).orElseThrow(NotFoundH))
+    }
 }
