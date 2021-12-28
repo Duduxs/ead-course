@@ -31,7 +31,7 @@ dependencies {
         "io.github.microutils:kotlin-logging-jvm:2.1.20",
     )
 
-    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("org.postgresql:postgresql:42.2.24")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
