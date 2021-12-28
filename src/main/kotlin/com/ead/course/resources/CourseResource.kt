@@ -43,8 +43,13 @@ class CourseResource(
 
     @DeleteMapping("{id}")
     fun delete(@PathVariable id: UUID): ResponseEntity<Void> {
+
         log.start(this::delete, parameters = arrayOf(id))
-        service.delete()
+
+        service.delete(id)
+
         log.end(this::delete)
+
+        return ResponseEntity.noContent().build()
     }
 }

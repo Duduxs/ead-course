@@ -1,5 +1,6 @@
 package com.ead.course.services
 
+import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.domains.Course
 import com.ead.course.domains.Module
 import com.ead.course.dtos.CourseDTO
@@ -23,6 +24,12 @@ class CourseService(
     fun save(dto: CourseDTO) = courseRepository.save(dto.toDomain()).toDTO()
 
     @Transactional
+    fun delete(id: UUID) {
+        val course = courseRepository.findById(id).orElseThrow { NotFoundHttpException("Course with id $id not found") }
+        delete(course)
+    }
+
+    @Transactional
     fun delete(course: Course) {
         val modules: Collection<Module> = moduleRepository.findAllModulesBy(course.id)
 
@@ -37,8 +44,5 @@ class CourseService(
         courseRepository.delete(course)
     }
 
-    @Transactional
-    fun delete(id: UUID) {
-        delete(courseRepository.findById(id).orElseThrow(NotFoundH))
-    }
+
 }
