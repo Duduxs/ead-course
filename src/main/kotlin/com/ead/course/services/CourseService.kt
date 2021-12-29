@@ -6,6 +6,7 @@ import com.ead.course.domains.Module
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
+import com.ead.course.mappers.updateEntity
 import com.ead.course.repositories.CourseRepository
 import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
@@ -20,8 +21,27 @@ class CourseService(
     private val lessonRepository: LessonRepository,
 ) {
 
+    @Transactional(readOnly = true)
+    fun findById(id: UUID) = courseRepository.findById(id)
+        .orElseThrow { NotFoundHttpException("Course with id $id not found") }
+        .toDTO()
+
+    @Transactional(readOnly = true)
+    fun findAll(): Collection<CourseDTO> = courseRepository.findAll().map { it.toDTO() }
+
     @Transactional
     fun save(dto: CourseDTO) = courseRepository.save(dto.toDomain()).toDTO()
+
+    @Transactional
+    fun update(id: UUID, dto: CourseDTO): CourseDTO {
+        val course = courseRepository.findById(id).orElseThrow { NotFoundHttpException("Course with id $id not found") }
+
+        val courseUpdated = updateEntity(course, dto)
+
+        courseRepository.save(courseUpdated)
+
+        return courseUpdated.toDTO()
+    }
 
     @Transactional
     fun delete(id: UUID) {
@@ -43,6 +63,4 @@ class CourseService(
 
         courseRepository.delete(course)
     }
-
-
 }

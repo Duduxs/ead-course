@@ -14,3 +14,13 @@ fun CourseDTO.toDomain() = Course(
 )
 
 fun Course.toDTO() = CourseDTO(this)
+
+fun updateEntity(course: Course, dto: CourseDTO) = Course(
+    id = course.id,
+    name = dto.name,
+    description = dto.description,
+    imageUrl = dto.imgUrl,
+    status = dto.status,
+    instructorId = dto.instructorId,
+    level = dto.level,
+)
