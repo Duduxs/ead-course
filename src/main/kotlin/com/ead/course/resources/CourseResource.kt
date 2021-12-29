@@ -30,8 +30,8 @@ class CourseResource(
     private val log = logger {}
 
     @GetMapping("{id}")
-    fun findById(@PathVariable id: UUID): ResponseEntity<CourseDTO> = log.makeLogged(this::findById)
-    {
+    fun findById(@PathVariable id: UUID): ResponseEntity<CourseDTO> =
+        log.makeLogged(function = this::findById, parameters = arrayOf(id)) {
 
         val entity = service.findById(id)
 
@@ -53,7 +53,7 @@ class CourseResource(
     }
 
     @PostMapping
-    fun create(@Valid @RequestBody dto: CourseDTO): ResponseEntity<CourseDTO> = log.makeLogged(this::create) {
+    fun create(@Valid @RequestBody dto: CourseDTO): ResponseEntity<CourseDTO> = log.makeLogged(this::create, dto) {
 
         val entity = service.save(dto)
 

@@ -4,14 +4,14 @@ import com.ead.course.domains.Course
 import com.ead.course.enums.CourseLevel
 import com.ead.course.enums.CourseStatus
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY
+import com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY
 import java.util.UUID
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
 data class CourseDTO(
 
-    @JsonProperty(access = WRITE_ONLY)
+    @JsonProperty(access = READ_ONLY)
     val id: UUID = UUID.randomUUID(),
 
     @field:NotBlank
