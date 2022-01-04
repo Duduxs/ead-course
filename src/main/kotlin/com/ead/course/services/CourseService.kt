@@ -2,6 +2,7 @@ package com.ead.course.services
 
 import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
+import com.ead.course.core.extensions.info
 import com.ead.course.core.extensions.start
 import com.ead.course.domains.Course
 import com.ead.course.domains.Module
@@ -80,13 +81,13 @@ class CourseService(
 
         val modules: Collection<Module> = moduleRepository.findAllModulesBy(course.id)
 
-        logger.start(this::delete, message = "modules size in course ${modules.size}")
+        logger.info(this::delete, message = "modules size in course ${modules.size}")
 
         if (modules.isNotEmpty()) {
             for (module in modules) {
                 val lessons = lessonRepository.findAllLessonsBy(module.id)
 
-                logger.start(this::delete, message = "lessons size in module id ${module.id} ${lessons.size}")
+                logger.info(this::delete, message = "lessons size in module id ${module.id} ${lessons.size}")
 
                 if (lessons.isNotEmpty()) lessonRepository.deleteAll(lessons)
             }

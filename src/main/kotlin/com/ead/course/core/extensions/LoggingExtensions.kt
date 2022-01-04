@@ -3,6 +3,7 @@ package com.ead.course.core.extensions
 import com.ead.course.core.entities.LoggerObjectIn
 import com.ead.course.core.entities.LoggerObjectOut
 import com.ead.course.core.entities.LoggerSimpleObjectIn
+import com.ead.course.core.entities.LoggerSimpleObjectInfo
 import com.ead.course.core.entities.LoggerSimpleObjectOut
 import com.ead.course.core.filters.UniqueTrackingNumberFilter.Companion.REQUEST_ID
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -131,6 +132,22 @@ private fun <T : Any> KLogger.endAnotherLayer(
         .writeValueAsString(
             LoggerSimpleObjectOut(
                 functionName = "${function.name}()",
+                body = body,
+            )
+        )
+}
+
+fun <T: Any> KLogger.info(
+    function: KFunction<T>,
+    message: String? = "",
+    body: T? = null,
+) = this.info {
+    mapper
+        .writerWithDefaultPrettyPrinter()
+        .writeValueAsString(
+            LoggerSimpleObjectInfo(
+                functionName = "${function.name}()",
+                message = message,
                 body = body,
             )
         )

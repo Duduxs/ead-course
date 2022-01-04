@@ -1,6 +1,8 @@
 package com.ead.course.core.entities
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY
+import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import org.springframework.http.HttpMethod
@@ -8,7 +10,7 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @JsonPropertyOrder("logType")
-@JsonInclude(JsonInclude.Include.NON_EMPTY, content = JsonInclude.Include.NON_NULL)
+@JsonInclude(NON_EMPTY, content = NON_NULL)
 data class LoggerSimpleObjectIn(
 
     val functionName: String,
@@ -25,7 +27,7 @@ data class LoggerSimpleObjectIn(
 }
 
 @JsonPropertyOrder("logType")
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(NON_NULL)
 data class LoggerSimpleObjectOut(
 
     val functionName: String,
@@ -37,7 +39,7 @@ data class LoggerSimpleObjectOut(
 
 
 @JsonPropertyOrder("logType", "method", "functionName", "X-Request-Id", "startDate")
-@JsonInclude(JsonInclude.Include.NON_EMPTY, content = JsonInclude.Include.NON_NULL)
+@JsonInclude(NON_EMPTY, content = NON_NULL)
 data class LoggerObjectIn(
 
     val method: HttpMethod,
@@ -62,7 +64,7 @@ data class LoggerObjectIn(
 }
 
 @JsonPropertyOrder("logType", "functionName", "endDate")
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(NON_NULL)
 data class LoggerObjectOut(
 
     val functionName: String,
@@ -76,4 +78,19 @@ data class LoggerObjectOut(
     val logType: String = "RESOURCE - END"
 
     val endDate: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
+}
+
+@JsonPropertyOrder("logType")
+@JsonInclude(NON_EMPTY, content = NON_NULL)
+data class LoggerSimpleObjectInfo(
+
+    val functionName: String,
+
+    @get:JsonProperty(value = "additionalMessage")
+    val message: String? = "",
+
+    val body: Any? = null,
+
+) {
+    val logType: String = "TASK - INFO"
 }
