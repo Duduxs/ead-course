@@ -135,8 +135,3 @@ private fun <T : Any> KLogger.endAnotherLayer(
             )
         )
 }
-
-inline fun KLogger.error(
-    throwable: Throwable,
-    message: () -> String = { "Something went wrong" },
-) = this.error(message(), throwable)

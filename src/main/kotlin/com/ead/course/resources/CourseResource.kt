@@ -5,7 +5,7 @@ import com.ead.course.core.extensions.makeLogged
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.services.CourseService
-import mu.KotlinLogging.logger
+import mu.KLogger
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,14 +24,14 @@ import javax.validation.Valid
 @RequestMapping("/courses")
 @CrossOrigin("*", maxAge = 3600)
 class CourseResource(
-    private val service: CourseService
+    private val service: CourseService,
+    private val logger: KLogger
 ) {
 
-    private val log = logger {}
 
     @GetMapping("{id}")
     fun findById(@PathVariable id: UUID): ResponseEntity<CourseDTO> =
-        log.makeLogged(function = this::findById, parameters = arrayOf(id)) {
+        logger.makeLogged(function = this::findById, parameters = arrayOf(id)) {
 
         val entity = service.findById(id)
 
@@ -42,18 +42,18 @@ class CourseResource(
     @GetMapping
     fun findAll(): ResponseEntity<Collection<CourseDTO>> {
 
-        log.start(this::findAll)
+        logger.start(this::findAll)
 
         val entities = service.findAll()
 
-        log.end(this::findAll)
+        logger.end(this::findAll)
 
         return ResponseEntity.ok(entities)
 
     }
 
     @PostMapping
-    fun create(@Valid @RequestBody dto: CourseDTO): ResponseEntity<CourseDTO> = log.makeLogged(this::create, dto) {
+    fun create(@Valid @RequestBody dto: CourseDTO): ResponseEntity<CourseDTO> = logger.makeLogged(this::create, dto) {
 
         val entity = service.save(dto)
 
@@ -70,11 +70,11 @@ class CourseResource(
     @PutMapping("{id}")
     fun update(@Valid @RequestBody dto: CourseDTO, @PathVariable id: UUID): ResponseEntity<CourseDTO> {
 
-        log.start(this::update, body = dto, parameters = arrayOf(id))
+        logger.start(this::update, body = dto, parameters = arrayOf(id))
 
         val updatedEntity = service.update(id, dto)
 
-        log.end(this::update, updatedEntity)
+        logger.end(this::update, updatedEntity)
 
         return ResponseEntity.ok(updatedEntity)
 
@@ -83,11 +83,11 @@ class CourseResource(
     @DeleteMapping("{id}")
     fun delete(@PathVariable id: UUID): ResponseEntity<Void> {
 
-        log.start(this::delete, parameters = arrayOf(id))
+        logger.start(this::delete, parameters = arrayOf(id))
 
-        service.delete(id)
+        service.deleteById(id)
 
-        log.end(this::delete)
+        logger.end(this::delete)
 
         return ResponseEntity.noContent().build()
 
