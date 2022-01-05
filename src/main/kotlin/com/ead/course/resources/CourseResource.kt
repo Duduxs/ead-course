@@ -28,7 +28,6 @@ class CourseResource(
     private val logger: KLogger
 ) {
 
-
     @GetMapping("{id}")
     fun findById(@PathVariable id: UUID): ResponseEntity<CourseDTO> =
         logger.makeLogged(function = this::findById, parameters = arrayOf(id)) {

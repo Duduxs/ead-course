@@ -1,4 +1,4 @@
-package com.ead.course.domains
+package com.ead.course.entities
 
 import com.ead.course.core.entities.Auditable
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -21,7 +21,7 @@ data class Module(
 
     @field:Id
     @field:GeneratedValue(strategy = AUTO)
-    val id: UUID,
+    val id: UUID? = null,
 
     @field:Column(nullable = false, length = 150)
     val title: String,

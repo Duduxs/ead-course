@@ -1,6 +1,6 @@
 package com.ead.course.repositories
 
-import com.ead.course.domains.Lesson
+import com.ead.course.entities.Lesson
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.util.UUID

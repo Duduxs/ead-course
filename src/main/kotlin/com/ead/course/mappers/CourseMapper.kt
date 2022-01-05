@@ -1,6 +1,6 @@
 package com.ead.course.mappers
 
-import com.ead.course.domains.Course
+import com.ead.course.entities.Course
 import com.ead.course.dtos.CourseDTO
 
 

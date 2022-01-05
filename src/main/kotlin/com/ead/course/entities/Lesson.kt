@@ -1,4 +1,4 @@
-package com.ead.course.domains
+package com.ead.course.entities
 
 import com.ead.course.core.entities.Auditable
 import com.fasterxml.jackson.annotation.JsonProperty

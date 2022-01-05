@@ -1,6 +1,6 @@
 package com.ead.course.dtos
 
-import com.ead.course.domains.Course
+import com.ead.course.entities.Course
 import com.ead.course.enums.CourseLevel
 import com.ead.course.enums.CourseStatus
 import com.fasterxml.jackson.annotation.JsonProperty

@@ -4,8 +4,8 @@ import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.info
 import com.ead.course.core.extensions.start
-import com.ead.course.domains.Course
-import com.ead.course.domains.Module
+import com.ead.course.entities.Course
+import com.ead.course.entities.Module
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
@@ -85,7 +85,7 @@ class CourseService(
 
         if (modules.isNotEmpty()) {
             for (module in modules) {
-                val lessons = lessonRepository.findAllLessonsBy(module.id)
+                val lessons = lessonRepository.findAllLessonsBy(module.id!!)
 
                 logger.info(this::delete, message = "lessons size in module id ${module.id} ${lessons.size}")
 
