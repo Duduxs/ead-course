@@ -25,14 +25,14 @@ class ModuleService(
     private val logger: KLogger,
 ) {
 
-//    @Transactional(readOnly = true)
-//    fun findById(id: UUID) = courseRepository.findById(id)
-//        .orElseThrow { NotFoundHttpException("Course with id $id not found") }
-//        .toDTO()
-//
+    @Transactional(readOnly = true)
+    fun findById(moduleId: UUID) = moduleRepository.findById(moduleId)
+        .orElseThrow { NotFoundHttpException("Module with id $moduleId not found") }
+        .toDTO()
+
     @Transactional(readOnly = true)
     fun findAll(courseId: UUID): Collection<ModuleDTO> = moduleRepository.findAllModulesBy(courseId).map { it.toDTO() }
-    
+
     @Transactional
     fun save(courseId: UUID, dto: ModuleDTO): ModuleDTO {
 

@@ -27,15 +27,15 @@ class ModuleResource(
 ) {
 
 
-//    @GetMapping("{id}")
-//    fun findById(@PathVariable id: UUID): ResponseEntity<CourseDTO> =
-//        logger.makeLogged(function = this::findById, parameters = arrayOf(id)) {
-//
-//            val entity = service.findById(id)
-//
-//            ResponseEntity.ok(entity)
-//
-//        }
+    @GetMapping("modules/{moduleId}")
+    fun findById(@PathVariable moduleId: UUID): ResponseEntity<ModuleDTO> =
+        logger.makeLogged(function = this::findById, parameters = arrayOf(moduleId)) {
+
+            val entity = service.findById(moduleId)
+
+            ResponseEntity.ok(entity)
+
+        }
 
     @GetMapping("/courses/{courseId}/modules")
     fun findAllInCourse(@PathVariable courseId: UUID): ResponseEntity<Collection<ModuleDTO>> {
