@@ -30,11 +30,9 @@ class ModuleService(
 //        .orElseThrow { NotFoundHttpException("Course with id $id not found") }
 //        .toDTO()
 //
-//    @Transactional(readOnly = true)
-//    fun findAll(courseId: UUID): Collection<ModuleDTO>  {
-//    moduleRepository.findAllModulesBy().map { it.toDTO() }
-//}
-
+    @Transactional(readOnly = true)
+    fun findAll(courseId: UUID): Collection<ModuleDTO> = moduleRepository.findAllModulesBy(courseId).map { it.toDTO() }
+    
     @Transactional
     fun save(courseId: UUID, dto: ModuleDTO): ModuleDTO {
 

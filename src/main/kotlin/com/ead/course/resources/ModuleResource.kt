@@ -3,7 +3,6 @@ package com.ead.course.resources
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.makeLogged
 import com.ead.course.core.extensions.start
-import com.ead.course.dtos.CourseDTO
 import com.ead.course.dtos.ModuleDTO
 import com.ead.course.services.ModuleService
 import mu.KLogger
@@ -37,7 +36,7 @@ class ModuleResource(
 //            ResponseEntity.ok(entity)
 //
 //        }
-//
+
     @GetMapping("/courses/{courseId}/modules")
     fun findAllInCourse(@PathVariable courseId: UUID): ResponseEntity<Collection<ModuleDTO>> {
 
@@ -45,7 +44,7 @@ class ModuleResource(
 
         val entities = service.findAll(courseId)
 
-        logger.end(this::findAll)
+        logger.end(this::findAllInCourse)
 
         return ResponseEntity.ok(entities)
 
