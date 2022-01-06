@@ -8,11 +8,11 @@ import com.ead.course.dtos.ModuleDTO
 import com.ead.course.entities.Module
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
+import com.ead.course.mappers.updateEntity
 import com.ead.course.repositories.CourseRepository
 import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
 import mu.KLogger
-import org.hibernate.annotations.NotFound
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -31,8 +31,10 @@ class ModuleService(
 //        .toDTO()
 //
 //    @Transactional(readOnly = true)
-//    fun findAll(): Collection<CourseDTO> = courseRepository.findAll().map { it.toDTO() }
-//
+//    fun findAll(courseId: UUID): Collection<ModuleDTO>  {
+//    moduleRepository.findAllModulesBy().map { it.toDTO() }
+//}
+
     @Transactional
     fun save(courseId: UUID, dto: ModuleDTO): ModuleDTO {
 
@@ -48,23 +50,23 @@ class ModuleService(
 
         return entity.toDTO()
     }
-//
-//    @Transactional
-//    fun update(id: UUID, dto: CourseDTO): CourseDTO {
-//
-//        logger.start(this::update, dto, parameters = arrayOf(id))
-//
-//        val course = courseRepository.findById(id).orElseThrow { NotFoundHttpException("Course with id $id not found") }
-//
-//        val courseUpdated = updateEntity(course, dto)
-//
-//        courseRepository.save(courseUpdated)
-//
-//        logger.end(this::update)
-//
-//        return courseUpdated.toDTO()
-//    }
-//
+
+    @Transactional
+    fun update(moduleId: UUID, dto: ModuleDTO): ModuleDTO {
+
+        logger.start(this::update)
+
+        val module = moduleRepository.findById(moduleId).orElseThrow { NotFoundHttpException("Module with id $moduleId not found") }
+
+        val moduleUpdated = updateEntity(module, dto)
+
+        moduleRepository.save(moduleUpdated)
+
+        logger.end(this::update)
+
+        return moduleUpdated.toDTO()
+    }
+
     @Transactional
     fun deleteById(id: UUID) {
 

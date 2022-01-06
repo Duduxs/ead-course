@@ -13,12 +13,9 @@ fun ModuleDTO.toDomain(course: Course) = Module(
 
 fun Module.toDTO() = ModuleDTO(this)
 
-//fun updateEntity(course: Course, dto: CourseDTO) = Course(
-//    id = course.id,
-//    name = dto.name,
-//    description = dto.description,
-//    imageUrl = dto.imgUrl,
-//    status = dto.status,
-//    instructorId = dto.instructorId,
-//    level = dto.level,
-//)
+fun updateEntity(module: Module, dto: ModuleDTO) = Module(
+    id = module.id,
+    course = module.course,
+    title = dto.title,
+    description = dto.description,
+)

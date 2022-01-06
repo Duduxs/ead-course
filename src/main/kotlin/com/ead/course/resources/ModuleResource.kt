@@ -38,18 +38,18 @@ class ModuleResource(
 //
 //        }
 //
-//    @GetMapping
-//    fun findAll(): ResponseEntity<Collection<CourseDTO>> {
-//
-//        logger.start(this::findAll)
-//
-//        val entities = service.findAll()
-//
-//        logger.end(this::findAll)
-//
-//        return ResponseEntity.ok(entities)
-//
-//    }
+    @GetMapping("/courses/{courseId}/modules")
+    fun findAllInCourse(@PathVariable courseId: UUID): ResponseEntity<Collection<ModuleDTO>> {
+
+        logger.start(this::findAllInCourse)
+
+        val entities = service.findAll(courseId)
+
+        logger.end(this::findAll)
+
+        return ResponseEntity.ok(entities)
+
+    }
 
     @PostMapping("courses/{courseId}/modules")
     fun create(@PathVariable courseId: UUID, @Valid @RequestBody dto: ModuleDTO): ResponseEntity<ModuleDTO> {
@@ -70,6 +70,19 @@ class ModuleResource(
 
     }
 
+    @PutMapping("modules/{moduleId}")
+    fun update(@PathVariable moduleId: UUID, @Valid @RequestBody dto: ModuleDTO): ResponseEntity<ModuleDTO> {
+
+        logger.start(this::update, body = dto, parameters = arrayOf(moduleId))
+
+        val updatedEntity = service.update(moduleId, dto)
+
+        logger.end(this::update, updatedEntity)
+
+        return ResponseEntity.ok(updatedEntity)
+
+    }
+
     @DeleteMapping("modules/{moduleId}")
     fun delete(@PathVariable moduleId: UUID): ResponseEntity<Void> =
         logger.makeLogged(function = this::delete, parameters = arrayOf(moduleId)) {
@@ -79,19 +92,4 @@ class ModuleResource(
             ResponseEntity.noContent().build()
 
         }
-
-//    @PutMapping("{id}")
-//    fun update(@PathVariable id: UUID, @Valid @RequestBody dto: CourseDTO): ResponseEntity<CourseDTO> {
-//
-//        logger.start(this::update, body = dto, parameters = arrayOf(id))
-//
-//        val updatedEntity = service.update(id, dto)
-//
-//        logger.end(this::update, updatedEntity)
-//
-//        return ResponseEntity.ok(updatedEntity)
-//
-//    }
-
-
 }
