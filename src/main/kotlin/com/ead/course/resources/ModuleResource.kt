@@ -26,7 +26,6 @@ class ModuleResource(
     private val logger: KLogger
 ) {
 
-
     @GetMapping("modules/{moduleId}")
     fun findById(@PathVariable moduleId: UUID): ResponseEntity<ModuleDTO> =
         logger.makeLogged(function = this::findById, parameters = arrayOf(moduleId)) {
