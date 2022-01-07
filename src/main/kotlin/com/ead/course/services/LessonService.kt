@@ -35,4 +35,19 @@ class LessonService(
 
         return entity.toDTO()
     }
+
+    @Transactional
+    fun deleteById(id: UUID) {
+
+        logger.start(this::deleteById)
+
+        try {
+            val module = lessonRepository.deleteById(id)
+        } catch(e: RuntimeException) {
+            throw NotFoundHttpException("Lesson with $id not found")
+        } finally {
+            logger.end(this::deleteById)
+        }
+    }
+
 }

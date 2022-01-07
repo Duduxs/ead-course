@@ -1,12 +1,14 @@
 package com.ead.course.resources
 
 import com.ead.course.core.extensions.end
+import com.ead.course.core.extensions.makeLogged
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.LessonDTO
 import com.ead.course.services.LessonService
 import mu.KLogger
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -64,7 +66,7 @@ class LessonResource(
 
     }
 
-//    @PutMapping("modules/{moduleId}")
+    //    @PutMapping("modules/{moduleId}")
 //    fun update(@PathVariable moduleId: UUID, @Valid @RequestBody dto: LessonDTO): ResponseEntity<LessonDTO> {
 //
 //        logger.start(this::update, body = dto, parameters = arrayOf(moduleId))
@@ -77,13 +79,13 @@ class LessonResource(
 //
 //    }
 //
-//    @DeleteMapping("modules/{moduleId}")
-//    fun delete(@PathVariable moduleId: UUID): ResponseEntity<Void> =
-//        logger.makeLogged(function = this::delete, parameters = arrayOf(moduleId)) {
-//
-//            service.deleteById(moduleId)
-//
-//            ResponseEntity.noContent().build()
-//
-//        }
+    @DeleteMapping("lessons/{lessonId}")
+    fun delete(@PathVariable lessonId: UUID): ResponseEntity<Void> =
+        logger.makeLogged(function = this::delete, parameters = arrayOf(lessonId)) {
+
+            service.deleteById(lessonId)
+
+            ResponseEntity.noContent().build()
+
+        }
 }

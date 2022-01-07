@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull
 class ModuleDTO(
 
     @NotNull
-    val id: UUID,
+    val id: UUID = UUID.randomUUID(),
 
     @field:NotBlank
     val title: String,
