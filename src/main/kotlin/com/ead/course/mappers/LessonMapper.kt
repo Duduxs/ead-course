@@ -17,9 +17,10 @@ fun LessonDTO.toDomain(module: Module) = Lesson(
 
 fun Lesson.toDTO() = LessonDTO(this)
 
-//fun updateEntity(module: Module, dto: ModuleDTO) = Module(
-//    id = module.id,
-//    course = module.course,
-//    title = dto.title,
-//    description = dto.description,
-//)
+fun updateEntity(lesson: Lesson, dto: LessonDTO) = Lesson(
+    id = lesson.id,
+    title = dto.title,
+    description = dto.description,
+    videoUrl = dto.videoUrl,
+    module = lesson.module,
+)
