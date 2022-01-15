@@ -122,7 +122,10 @@ private fun <T : Any> KLogger.endHttpLayer(
                 LoggerObjectOut(
                     functionName = "${function.name}()",
                     body = body,
-                    totalRequisitionTime = "${SECONDS.between(time, now)} SECONDS (${MILLIS.between(time, now)} MILLIS)"
+                    totalRequisitionTime =
+                    """
+                        ${SECONDS.between(time, now)} SECONDS (${MILLIS.between(time, now)} MILLIS)
+                    """.inlineContent()
                 )
             )
     }
