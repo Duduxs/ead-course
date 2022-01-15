@@ -25,10 +25,13 @@ dependencies {
         "org.springframework.boot:spring-boot-starter-web",
         "org.springframework.boot:spring-boot-starter-data-jpa",
         "org.springframework.boot:spring-boot-starter-validation",
+
         "com.fasterxml.jackson.module:jackson-module-kotlin",
         "org.jetbrains.kotlin:kotlin-reflect",
         "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+
         "io.github.microutils:kotlin-logging-jvm:2.1.20",
+        "net.kaczmarzyk:specification-arg-resolver:2.6.2"
     )
 
     runtimeOnly("org.postgresql:postgresql:42.2.24")
