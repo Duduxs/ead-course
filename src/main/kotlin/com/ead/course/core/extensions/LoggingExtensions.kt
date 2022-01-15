@@ -13,6 +13,7 @@ import org.slf4j.MDC
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit.MILLIS
 import java.time.temporal.ChronoUnit.SECONDS
 import kotlin.reflect.KFunction
 
@@ -111,16 +112,20 @@ fun <T : Any> KLogger.end(
 private fun <T : Any> KLogger.endHttpLayer(
     function: KFunction<T>,
     body: T? = null,
-) = this.info {
-    mapper
-        .writerWithDefaultPrettyPrinter()
-        .writeValueAsString(
-            LoggerObjectOut(
-                functionName = "${function.name}()",
-                body = body,
-                totalRequisitionTime = "${SECONDS.between(time, LocalDateTime.now())} SECONDS"
+) {
+    val now = LocalDateTime.now()
+
+    this.info {
+        mapper
+            .writerWithDefaultPrettyPrinter()
+            .writeValueAsString(
+                LoggerObjectOut(
+                    functionName = "${function.name}()",
+                    body = body,
+                    totalRequisitionTime = "${SECONDS.between(time, now)} SECONDS (${MILLIS.between(time, now)} MILLIS)"
+                )
             )
-        )
+    }
 }
 
 private fun <T : Any> KLogger.endAnotherLayer(
@@ -137,7 +142,7 @@ private fun <T : Any> KLogger.endAnotherLayer(
         )
 }
 
-fun <T: Any> KLogger.info(
+fun <T : Any> KLogger.info(
     function: KFunction<T>,
     message: String? = "",
     body: T? = null,

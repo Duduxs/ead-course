@@ -11,15 +11,6 @@ plugins {
 group = "com.ead"
 version = "0.0.1-SNAPSHOT"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementations(
         "org.springframework.boot:spring-boot-starter-web",
@@ -37,6 +28,15 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql:42.2.24")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenCentral()
 }
 
 tasks {

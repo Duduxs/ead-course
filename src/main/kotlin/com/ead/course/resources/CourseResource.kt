@@ -4,8 +4,19 @@ import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.makeLogged
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
+import com.ead.course.entities.Course
 import com.ead.course.services.CourseService
+import com.ead.course.specifications.CourseSpec
 import mu.KLogger
+import net.kaczmarzyk.spring.data.jpa.domain.Equal
+import net.kaczmarzyk.spring.data.jpa.domain.Like
+import net.kaczmarzyk.spring.data.jpa.web.annotation.And
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort.Direction.ASC
+import org.springframework.data.jpa.domain.Specification
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -15,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.util.UUID
@@ -32,18 +44,25 @@ class CourseResource(
     fun findById(@PathVariable id: UUID): ResponseEntity<CourseDTO> =
         logger.makeLogged(function = this::findById, parameters = arrayOf(id)) {
 
-        val entity = service.findById(id)
+            val entity = service.findById(id)
 
-        ResponseEntity.ok(entity)
+            ResponseEntity.ok(entity)
 
-    }
+        }
 
     @GetMapping
-    fun findAll(): ResponseEntity<Collection<CourseDTO>> {
+    fun findAll(
+        @And(
+            Spec(path = "name", spec = Like::class),
+            Spec(path = "level", spec = Equal::class),
+            Spec(path = "status", spec = Equal::class)
+        ) spec: Specification<Course>?,
+        @PageableDefault(direction = ASC) pageable: Pageable,
+    ): ResponseEntity<Page<CourseDTO>> {
 
         logger.start(this::findAll)
 
-        val entities = service.findAll()
+        val entities = service.findAll(spec, pageable)
 
         logger.end(this::findAll)
 

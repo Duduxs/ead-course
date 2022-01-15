@@ -20,7 +20,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "tb_courses")
-data class Course(
+class Course(
 
     @field:Id
     @field:GeneratedValue(strategy = AUTO)

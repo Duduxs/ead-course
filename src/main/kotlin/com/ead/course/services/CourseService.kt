@@ -4,9 +4,9 @@ import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.info
 import com.ead.course.core.extensions.start
+import com.ead.course.dtos.CourseDTO
 import com.ead.course.entities.Course
 import com.ead.course.entities.Module
-import com.ead.course.dtos.CourseDTO
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
 import com.ead.course.mappers.updateEntity
@@ -14,6 +14,9 @@ import com.ead.course.repositories.CourseRepository
 import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
 import mu.KLogger
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -32,7 +35,10 @@ class CourseService(
         .toDTO()
 
     @Transactional(readOnly = true)
-    fun findAll(): Collection<CourseDTO> = courseRepository.findAll().map { it.toDTO() }
+    fun findAll(
+        spec: Specification<Course>?,
+        pageable: Pageable,
+    ): Page<CourseDTO> = courseRepository.findAll(spec, pageable).map { it.toDTO() }
 
     @Transactional
     fun save(dto: CourseDTO): CourseDTO {
