@@ -10,7 +10,11 @@ import mu.KLogger
 import net.kaczmarzyk.spring.data.jpa.domain.Like
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort.Direction.ASC
 import org.springframework.data.jpa.domain.Specification
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -28,7 +32,7 @@ import javax.validation.Valid
 @CrossOrigin("*", maxAge = 3600)
 class LessonResource(
     private val service: LessonService,
-    private val logger: KLogger
+    private val logger: KLogger,
 ) {
 
     @GetMapping("lessons/{lessonId}")
@@ -47,12 +51,13 @@ class LessonResource(
         @And(
             Spec(path = "title", spec = Like::class)
         ) spec: Specification<Lesson>?,
-        @PathVariable moduleId: UUID
-    ): ResponseEntity<Collection<LessonDTO>> {
+        @PathVariable moduleId: UUID,
+        @PageableDefault(direction = ASC) pageable: Pageable
+    ): ResponseEntity<Page<LessonDTO>> {
 
         logger.start(this::findAllInModules, parameters = arrayOf(moduleId))
 
-        val entities = service.findAll(moduleId)
+        val entities = service.findAll(moduleId, spec, pageable)
 
         logger.end(this::findAllInModules)
 

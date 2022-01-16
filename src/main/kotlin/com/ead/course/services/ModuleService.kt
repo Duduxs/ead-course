@@ -45,6 +45,8 @@ class ModuleService(
         pageable: Pageable,
     ): Page<ModuleDTO> {
 
+        logger.start(this::findAll)
+
         val spec = Specification { root: Root<Module>, query: CriteriaQuery<*>, cb: CriteriaBuilder ->
             query.distinct(true)
             val module: Root<Module> = root
@@ -52,6 +54,8 @@ class ModuleService(
             val courseModules: Expression<Collection<Module>> = course.get("modules")
             cb.and(cb.equal(course.get<String>("id"), courseId), cb.isMember(module, courseModules))
         }.and(defaultSpec)
+
+        logger.end(this::findAll)
 
        return moduleRepository.findAll(spec, pageable).map { it.toDTO() }
     }

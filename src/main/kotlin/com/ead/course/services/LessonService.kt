@@ -4,16 +4,24 @@ import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.LessonDTO
-import com.ead.course.dtos.ModuleDTO
+import com.ead.course.entities.Lesson
+import com.ead.course.entities.Module
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
 import com.ead.course.mappers.updateEntity
 import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
 import mu.KLogger
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
+import javax.persistence.criteria.CriteriaBuilder
+import javax.persistence.criteria.CriteriaQuery
+import javax.persistence.criteria.Expression
+import javax.persistence.criteria.Root
 
 @Service
 class LessonService(
@@ -28,7 +36,28 @@ class LessonService(
         .toDTO()
 
     @Transactional(readOnly = true)
-    fun findAll(moduleId: UUID): Collection<LessonDTO> = lessonRepository.findAllLessonsBy(moduleId).map { it.toDTO() }
+    fun findAll(
+        moduleId: UUID,
+        defaultSpec: Specification<Lesson>?,
+        pageable: Pageable,
+    ): Page<LessonDTO> {
+
+        logger.start(this::findAll)
+
+        val spec = Specification { root: Root<Lesson>, query: CriteriaQuery<*>, cb: CriteriaBuilder ->
+            query.distinct(true)
+            val lesson: Root<Lesson> = root
+            val module: Root<Module> = query.from(Module::class.java)
+            val moduleLessons: Expression<Collection<Lesson>> = module.get("lessons")
+            cb.and(cb.equal(module.get<String>("id"), moduleId), cb.isMember(lesson, moduleLessons))
+        }.and(defaultSpec)
+
+        val result = lessonRepository.findAll(spec, pageable).map { it.toDTO() }
+
+        logger.end(this::findAll)
+
+        return result
+    }
 
     @Transactional
     fun save(moduleId: UUID, dto: LessonDTO): LessonDTO {
