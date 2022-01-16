@@ -5,6 +5,7 @@ import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.info
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.ModuleDTO
+import com.ead.course.entities.Course
 import com.ead.course.entities.Module
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
@@ -13,9 +14,16 @@ import com.ead.course.repositories.CourseRepository
 import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
 import mu.KLogger
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
+import javax.persistence.criteria.CriteriaBuilder
+import javax.persistence.criteria.CriteriaQuery
+import javax.persistence.criteria.Expression
+import javax.persistence.criteria.Root
 
 @Service
 class ModuleService(
@@ -31,7 +39,22 @@ class ModuleService(
         .toDTO()
 
     @Transactional(readOnly = true)
-    fun findAll(courseId: UUID): Collection<ModuleDTO> = moduleRepository.findAllModulesBy(courseId).map { it.toDTO() }
+    fun findAll(
+        courseId: UUID,
+        defaultSpec: Specification<Module>?,
+        pageable: Pageable,
+    ): Page<ModuleDTO> {
+
+        val spec = Specification { root: Root<Module>, query: CriteriaQuery<*>, cb: CriteriaBuilder ->
+            query.distinct(true)
+            val module: Root<Module> = root
+            val course: Root<Course> = query.from(Course::class.java)
+            val courseModules: Expression<Collection<Module>> = course.get("modules")
+            cb.and(cb.equal(course.get<String>("id"), courseId), cb.isMember(module, courseModules))
+        }.and(defaultSpec)
+
+       return moduleRepository.findAll(spec, pageable).map { it.toDTO() }
+    }
 
     @Transactional
     fun save(courseId: UUID, dto: ModuleDTO): ModuleDTO {
@@ -54,7 +77,8 @@ class ModuleService(
 
         logger.start(this::update)
 
-        val module = moduleRepository.findById(moduleId).orElseThrow { NotFoundHttpException("Module with id $moduleId not found") }
+        val module = moduleRepository.findById(moduleId)
+            .orElseThrow { NotFoundHttpException("Module with id $moduleId not found") }
 
         val moduleUpdated = updateEntity(module, dto)
 
@@ -86,7 +110,9 @@ class ModuleService(
 
         logger.info(this::delete, message = "lessons size in module id ${module.id} ${lessons.size}")
 
-        if(lessons.isNotEmpty()) { lessonRepository.deleteAll(lessons) }
+        if (lessons.isNotEmpty()) {
+            lessonRepository.deleteAll(lessons)
+        }
 
         moduleRepository.delete(module)
 

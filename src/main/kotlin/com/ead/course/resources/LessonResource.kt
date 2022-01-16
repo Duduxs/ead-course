@@ -4,8 +4,13 @@ import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.makeLogged
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.LessonDTO
+import com.ead.course.entities.Lesson
 import com.ead.course.services.LessonService
 import mu.KLogger
+import net.kaczmarzyk.spring.data.jpa.domain.Like
+import net.kaczmarzyk.spring.data.jpa.web.annotation.And
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -31,16 +36,19 @@ class LessonResource(
         @PathVariable lessonId: UUID
     ): ResponseEntity<LessonDTO> = logger.makeLogged(function = this::findById, parameters = arrayOf(lessonId)) {
 
-            val entity = service.findById(lessonId)
+        val entity = service.findById(lessonId)
 
-            ResponseEntity.ok(entity)
+        ResponseEntity.ok(entity)
 
-        }
+    }
 
     @GetMapping("/modules/{moduleId}/lessons")
     fun findAllInModules(
-        @PathVariable moduleId: UUID)
-    : ResponseEntity<Collection<LessonDTO>> {
+        @And(
+            Spec(path = "title", spec = Like::class)
+        ) spec: Specification<Lesson>?,
+        @PathVariable moduleId: UUID
+    ): ResponseEntity<Collection<LessonDTO>> {
 
         logger.start(this::findAllInModules, parameters = arrayOf(moduleId))
 
@@ -92,9 +100,9 @@ class LessonResource(
         @PathVariable lessonId: UUID
     ): ResponseEntity<Void> = logger.makeLogged(function = this::delete, parameters = arrayOf(lessonId)) {
 
-            service.deleteById(lessonId)
+        service.deleteById(lessonId)
 
-            ResponseEntity.noContent().build()
+        ResponseEntity.noContent().build()
 
-        }
+    }
 }

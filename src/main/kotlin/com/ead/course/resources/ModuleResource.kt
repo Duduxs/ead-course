@@ -4,8 +4,17 @@ import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.makeLogged
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.ModuleDTO
+import com.ead.course.entities.Module
 import com.ead.course.services.ModuleService
 import mu.KLogger
+import net.kaczmarzyk.spring.data.jpa.domain.Like
+import net.kaczmarzyk.spring.data.jpa.web.annotation.And
+import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort.Direction.ASC
+import org.springframework.data.jpa.domain.Specification
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -37,11 +46,17 @@ class ModuleResource(
         }
 
     @GetMapping("/courses/{courseId}/modules")
-    fun findAllInCourse(@PathVariable courseId: UUID): ResponseEntity<Collection<ModuleDTO>> {
+    fun findAllInCourse(
+        @And(
+            Spec(path = "title", spec = Like::class)
+        ) spec: Specification<Module>?,
+        @PathVariable courseId: UUID,
+        @PageableDefault(direction = ASC) pageable: Pageable,
+    ): ResponseEntity<Page<ModuleDTO>> {
 
         logger.start(this::findAllInCourse)
 
-        val entities = service.findAll(courseId)
+        val entities = service.findAll(courseId, spec, pageable)
 
         logger.end(this::findAllInCourse)
 
