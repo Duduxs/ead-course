@@ -15,12 +15,12 @@ import javax.persistence.MappedSuperclass
 abstract class Auditable {
 
     @field:CreatedDate
-    @field:JsonFormat(shape = STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @field:JsonFormat(shape = STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     @field:Column(nullable = false, updatable = false)
     open var createdDate: LocalDateTime = LocalDateTime.now()
 
     @field:LastModifiedDate
-    @field:JsonFormat(shape = STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @field:JsonFormat(shape = STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     @field:Column(nullable = false)
     open var modifiedDate: LocalDateTime = LocalDateTime.now()
 }
