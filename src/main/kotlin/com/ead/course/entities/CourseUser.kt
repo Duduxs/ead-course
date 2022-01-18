@@ -3,7 +3,7 @@ package com.ead.course.entities
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.FetchType
+import javax.persistence.FetchType.LAZY
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.AUTO
 import javax.persistence.Id
@@ -19,7 +19,7 @@ class CourseUser(
     @field:Column(nullable = false)
     val id: UUID,
 
-    @field:ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @field:ManyToOne(fetch = LAZY, optional = false)
     val course: Course,
 
     @field:Column(nullable = false)
