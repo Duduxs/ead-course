@@ -50,4 +50,8 @@ class Course(
     @field:Fetch(SUBSELECT)
     val modules: Set<Module> = HashSet(),
 
+    @field:JsonProperty(access = WRITE_ONLY)
+    @field:OneToMany(mappedBy = "course")
+    val courseUsers: Set<CourseUser> = HashSet(),
+
 ) : Auditable()
