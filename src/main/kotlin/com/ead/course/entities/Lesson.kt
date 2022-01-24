@@ -16,21 +16,21 @@ import javax.persistence.Table
 @Table(name = "tb_lessons")
 data class Lesson(
 
-    @field:Id
-    @field:GeneratedValue(strategy = AUTO)
+    @Id
+    @GeneratedValue(strategy = AUTO)
     val id: UUID,
 
-    @field:Column(nullable = false, length = 150)
+    @Column(nullable = false, length = 150)
     val title: String,
 
-    @field:Column(nullable = false, length = 250, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 250, columnDefinition = "TEXT")
     val description: String,
 
-    @field:Column(nullable = false)
+    @Column(nullable = false)
     val videoUrl: String,
 
     @field:JsonProperty(access = WRITE_ONLY)
-    @field:ManyToOne(optional = false)
+    @ManyToOne(optional = false)
     val module: Module,
 
 ) : Auditable()

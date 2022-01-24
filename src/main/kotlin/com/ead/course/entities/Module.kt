@@ -19,23 +19,23 @@ import javax.persistence.Table
 @Table(name = "tb_modules")
 data class Module(
 
-    @field:Id
-    @field:GeneratedValue(strategy = AUTO)
+    @Id
+    @GeneratedValue(strategy = AUTO)
     val id: UUID? = null,
 
-    @field:Column(nullable = false, length = 150)
+    @Column(nullable = false, length = 150)
     val title: String,
 
-    @field:Column(nullable = false, length = 250, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 250, columnDefinition = "TEXT")
     val description: String,
 
     @field:JsonProperty(access = WRITE_ONLY)
-    @field:ManyToOne(optional = false)
+    @ManyToOne(optional = false)
     val course: Course,
 
     @field:JsonProperty(access = WRITE_ONLY)
-    @field:OneToMany(mappedBy = "module")
-    @field:Fetch(SUBSELECT)
+    @OneToMany(mappedBy = "module")
+    @Fetch(SUBSELECT)
     val lessons: Set<Lesson> = HashSet()
 
 ) : Auditable()

@@ -14,15 +14,15 @@ import javax.persistence.Table
 @Table(name = "tb_courses_user")
 class CourseUser(
 
-    @field:Id
-    @field:GeneratedValue(strategy = AUTO)
-    @field:Column(nullable = false)
+    @Id
+    @GeneratedValue(strategy = AUTO)
+    @Column(nullable = false)
     val id: UUID,
 
-    @field:ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne(fetch = LAZY, optional = false)
     val course: Course,
 
-    @field:Column(nullable = false)
+    @Column(nullable = false)
     val userId: UUID
 
 )

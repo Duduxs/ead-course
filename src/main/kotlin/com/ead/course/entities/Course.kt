@@ -22,36 +22,36 @@ import javax.persistence.Table
 @Table(name = "tb_courses")
 class Course(
 
-    @field:Id
-    @field:GeneratedValue(strategy = AUTO)
+    @Id
+    @GeneratedValue(strategy = AUTO)
     val id: UUID = UUID.randomUUID(),
 
-    @field:Column(nullable = false, length = 150)
+    @Column(nullable = false, length = 150)
     val name: String,
 
-    @field:Column(nullable = false, length = 250, columnDefinition = "TEXT")
+    @Column(nullable = false, length = 250, columnDefinition = "TEXT")
     val description: String,
 
     val imageUrl: String,
 
-    @field:Column(nullable = false)
-    @field:Enumerated(STRING)
+    @Column(nullable = false)
+    @Enumerated(STRING)
     val status: CourseStatus,
 
-    @field:Column(nullable = false)
-    @field:Enumerated(STRING)
+    @Column(nullable = false)
+    @Enumerated(STRING)
     val level: CourseLevel,
 
-    @field:Column(nullable = false)
+    @Column(nullable = false)
     val instructorId: UUID,
 
     @field:JsonProperty(access = WRITE_ONLY)
-    @field:OneToMany(mappedBy = "course")
-    @field:Fetch(SUBSELECT)
+    @OneToMany(mappedBy = "course")
+    @Fetch(SUBSELECT)
     val modules: Set<Module> = HashSet(),
 
     @field:JsonProperty(access = WRITE_ONLY)
-    @field:OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course")
     val courseUsers: Set<CourseUser> = HashSet(),
 
 ) : Auditable()
