@@ -44,7 +44,6 @@ class ModuleResource(
             ResponseEntity.ok(entity)
 
         }
-
     @GetMapping("/courses/{courseId}/modules")
     fun findAllInCourse(
         @And(

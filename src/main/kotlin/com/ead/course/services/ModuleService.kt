@@ -59,7 +59,6 @@ class ModuleService(
 
        return moduleRepository.findAll(spec, pageable).map { it.toDTO() }
     }
-
     @Transactional
     fun save(courseId: UUID, dto: ModuleDTO): ModuleDTO {
 

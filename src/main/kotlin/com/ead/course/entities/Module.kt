@@ -12,6 +12,7 @@ import javax.persistence.FetchType.LAZY
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.AUTO
 import javax.persistence.Id
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
@@ -32,6 +33,7 @@ class Module(
 
     @field:JsonProperty(access = WRITE_ONLY)
     @ManyToOne(optional = false, fetch = LAZY)
+    @JoinColumn(name = "course_id")
     val course: Course,
 
     @field:JsonProperty(access = WRITE_ONLY)

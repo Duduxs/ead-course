@@ -6,10 +6,15 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     kotlin("jvm") version "1.6.0"
     kotlin("plugin.spring") version "1.6.0"
+    kotlin("plugin.allopen") version "1.4.31"
 }
 
 group = "com.ead"
 version = "0.0.1-SNAPSHOT"
+
+allOpen {
+    annotation("javax.persistence.Entity")
+}
 
 dependencies {
     implementations(

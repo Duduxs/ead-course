@@ -12,7 +12,6 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType.STRING
 import javax.persistence.Enumerated
-import javax.persistence.FetchType.LAZY
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.AUTO
 import javax.persistence.Id
@@ -47,7 +46,7 @@ class Course(
     val instructorId: UUID,
 
     @field:JsonProperty(access = WRITE_ONLY)
-    @OneToMany(mappedBy = "course", fetch = LAZY)
+    @OneToMany(mappedBy = "course")
     @Fetch(SUBSELECT)
     val modules: Set<Module> = HashSet(),
 

@@ -10,6 +10,7 @@ import javax.persistence.FetchType.LAZY
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.AUTO
 import javax.persistence.Id
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
 
@@ -32,6 +33,7 @@ class Lesson(
 
     @field:JsonProperty(access = WRITE_ONLY)
     @ManyToOne(optional = false, fetch = LAZY)
+    @JoinColumn(name = "module_id")
     val module: Module,
 
 ) : Auditable()
