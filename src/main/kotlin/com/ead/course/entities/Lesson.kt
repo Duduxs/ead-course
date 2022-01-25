@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType.LAZY
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.AUTO
 import javax.persistence.Id
@@ -14,7 +15,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "tb_lessons")
-data class Lesson(
+class Lesson(
 
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -30,7 +31,7 @@ data class Lesson(
     val videoUrl: String,
 
     @field:JsonProperty(access = WRITE_ONLY)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = LAZY)
     val module: Module,
 
 ) : Auditable()

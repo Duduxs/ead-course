@@ -8,6 +8,7 @@ import org.hibernate.annotations.FetchMode.SUBSELECT
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType.LAZY
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.AUTO
 import javax.persistence.Id
@@ -17,7 +18,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "tb_modules")
-data class Module(
+class Module(
 
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -30,7 +31,7 @@ data class Module(
     val description: String,
 
     @field:JsonProperty(access = WRITE_ONLY)
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = LAZY)
     val course: Course,
 
     @field:JsonProperty(access = WRITE_ONLY)

@@ -42,6 +42,8 @@ fun <T : Any> KLogger.start(
     vararg parameters: T?
 ) = let {
 
+    time = LocalDateTime.now()
+
     val method = function.annotations.lookForAnyHttpMethodAnnotation()
 
     if (method != null)
@@ -58,7 +60,6 @@ private fun <T : Any> KLogger.startHttpLayer(
     message: String? = "",
     vararg parameters: T?,
 ) {
-    time = LocalDateTime.now()
 
     this.info {
         mapper
