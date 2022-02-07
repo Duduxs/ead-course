@@ -6,6 +6,8 @@ import com.ead.course.core.extensions.info
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.entities.Course
+import com.ead.course.entities.CourseUser
+import com.ead.course.entities.Lesson
 import com.ead.course.entities.Module
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
@@ -20,6 +22,11 @@ import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
+import javax.persistence.criteria.CriteriaBuilder
+import javax.persistence.criteria.CriteriaQuery
+import javax.persistence.criteria.Expression
+import javax.persistence.criteria.Join
+import javax.persistence.criteria.Root
 
 @Service
 class CourseService(
@@ -36,9 +43,28 @@ class CourseService(
 
     @Transactional(readOnly = true)
     fun findAll(
-        spec: Specification<Course>?,
+        defaultSpec: Specification<Course>?,
+        userId: UUID?,
         pageable: Pageable,
-    ): Page<CourseDTO> = courseRepository.findAll(spec, pageable).map { it.toDTO() }
+    ): Page<CourseDTO> {
+
+        logger.start(this::findAll)
+
+        val spec = Specification { root: Root<Course>, query: CriteriaQuery<*>, cb: CriteriaBuilder ->
+            query.distinct(true)
+            val courseProd: Join<Course, CourseUser> = root.join("courseUsers")
+            cb.equal(courseProd.get<CourseUser>("userId"), userId)
+        }.and(defaultSpec)
+
+        logger.end(this::findAll)
+
+        return if(userId != null) {
+             courseRepository.findAll(spec.and(defaultSpec), pageable).map { it.toDTO() }
+        } else {
+            courseRepository.findAll(defaultSpec, pageable).map { it.toDTO() }
+        }
+
+    }
 
     @Transactional
     fun save(dto: CourseDTO): CourseDTO {

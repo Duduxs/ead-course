@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.util.UUID
@@ -55,12 +56,13 @@ class CourseResource(
             Spec(path = "level", spec = Equal::class),
             Spec(path = "status", spec = Equal::class)
         ) spec: Specification<Course>?,
+        @RequestParam userId: UUID?,
         @PageableDefault(direction = ASC) pageable: Pageable,
     ): ResponseEntity<Page<CourseDTO>> {
 
         logger.start(this::findAll)
 
-        val entities = service.findAll(spec, pageable)
+        val entities = service.findAll(spec, userId, pageable)
 
         logger.end(this::findAll)
 
