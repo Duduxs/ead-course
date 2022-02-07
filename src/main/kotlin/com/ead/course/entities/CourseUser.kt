@@ -9,9 +9,13 @@ import javax.persistence.GenerationType.AUTO
 import javax.persistence.Id
 import javax.persistence.ManyToOne
 import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 
 @Entity
-@Table(name = "tb_courses_user")
+@Table(
+    name = "tb_courses_user",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["course_id", "userId"])]
+)
 class CourseUser(
 
     @Id
