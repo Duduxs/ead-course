@@ -7,7 +7,6 @@ import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.entities.Course
 import com.ead.course.entities.CourseUser
-import com.ead.course.entities.Lesson
 import com.ead.course.entities.Module
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
-import javax.persistence.criteria.Expression
 import javax.persistence.criteria.Join
 import javax.persistence.criteria.Root
 
