@@ -34,8 +34,8 @@ class CourseClient(
                 courseId=$courseId
                 &page=${pageable.pageNumber}
                 &size=${pageable.pageSize}
-                &sort=${pageable.sort.toString().replace(": ", ", ")}
-            """.inlineContent().replace(" ", "")
+                &sort=${pageable.sort.toString().replace(": ", ",")}
+            """.inlineContent()
 
         logger.start(this::findAllBy, parameters = arrayOf(url))
 
