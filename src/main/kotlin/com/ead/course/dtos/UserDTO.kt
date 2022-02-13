@@ -1,5 +1,7 @@
 package com.ead.course.dtos
 
+import com.ead.course.enums.UserStatus
+import com.ead.course.enums.UserType
 import java.util.UUID
 import javax.validation.constraints.NotBlank
 
@@ -19,6 +21,10 @@ data class UserDTO(
 
     val cpf: String,
 
-    val imgUrl: String
+    val imgUrl: String,
+
+    val type: UserType,
+
+    val status: UserStatus
 
 )

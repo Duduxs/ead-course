@@ -1,11 +1,12 @@
 package com.ead.course.resources
 
-import com.ead.course.clients.CourseClient
+import com.ead.course.clients.AuthUserClient
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.makeLogged
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.SubscriptionDTO
 import com.ead.course.dtos.UserDTO
+import com.ead.course.entities.CourseUser
 import com.ead.course.services.CourseService
 import com.ead.course.services.CourseUserService
 import mu.KLogging
@@ -27,7 +28,7 @@ import javax.validation.Valid
 @RestController
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 class CourseUserResource(
-    private val client: CourseClient,
+    private val client: AuthUserClient,
     private val service: CourseService,
     private val courseUserService: CourseUserService,
 ) {
@@ -48,11 +49,13 @@ class CourseUserResource(
     fun subscribeUserInCourse(
         @PathVariable("courseId") courseId: UUID,
         @RequestBody @Valid dto: SubscriptionDTO
-    ): ResponseEntity<Any> {
+    ): ResponseEntity<CourseUser> {
 
         logger.start(this::subscribeUserInCourse, body = dto, parameters = arrayOf(courseId))
 
         val course = service.findById(courseId)
+
+        val user = client.findById(dto)
 
         val courseUser = courseUserService.saveBy(course, dto)
 
