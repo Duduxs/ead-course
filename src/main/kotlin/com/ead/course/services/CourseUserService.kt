@@ -1,9 +1,50 @@
 package com.ead.course.services
 
+import com.ead.course.core.exceptions.ConflictHttpException
+import com.ead.course.core.extensions.end
+import com.ead.course.core.extensions.start
+import com.ead.course.dtos.CourseDTO
+import com.ead.course.dtos.SubscriptionDTO
+import com.ead.course.entities.CourseUser
+import com.ead.course.mappers.toDomainCourseUser
 import com.ead.course.repositories.CourseUserRepository
+import mu.KLogging
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CourseUserService(
     private val courseUserRepository: CourseUserRepository,
-)
+) {
+
+    @Transactional
+    fun saveBy(courseDTO: CourseDTO, subscriptionDTO: SubscriptionDTO): CourseUser {
+
+        logger.start(this::saveBy)
+
+        throwIfUserIsAlreadyRegistered(courseDTO, subscriptionDTO)
+
+        val entity = courseDTO.toDomainCourseUser(subscriptionDTO)
+            .also { courseUserRepository.save(it) }
+
+        logger.end(this::saveBy)
+
+        return entity
+
+    }
+
+    @Transactional(readOnly = true)
+    fun throwIfUserIsAlreadyRegistered(courseDTO: CourseDTO, subscriptionDTO: SubscriptionDTO) {
+
+        logger.start(this::throwIfUserIsAlreadyRegistered)
+
+        if(courseUserRepository.existsByCourseAndUserId(courseDTO.id, subscriptionDTO.userId)) {
+            throw ConflictHttpException("This user is already registered in course ${courseDTO.id}")
+        }
+
+        logger.end(this::throwIfUserIsAlreadyRegistered)
+
+    }
+
+    companion object : KLogging()
+}

@@ -6,6 +6,7 @@ import com.ead.course.core.extensions.start
 import com.ead.course.dtos.ResponsePageDTO
 import com.ead.course.dtos.UserDTO
 import mu.KotlinLogging.logger
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -21,16 +22,18 @@ class CourseClient(
     private val template: RestTemplate
 ) {
 
+    @Value("\${ead.api.url.authuser}")
+    private val authUserUri: String = ""
+
     companion object {
         private val logger = logger {}
-        private const val REQUEST_URI: String = "http://localhost:8087"
     }
 
     fun findAllBy(courseId: UUID, pageable: Pageable): Page<UserDTO> {
 
         val url: String =
             """
-                $REQUEST_URI/users?
+                $authUserUri/users?
                 courseId=$courseId
                 &page=${pageable.pageNumber}
                 &size=${pageable.pageSize}

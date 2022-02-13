@@ -20,8 +20,8 @@ class CourseUser(
 
     @Id
     @GeneratedValue(strategy = AUTO)
-    @Column(nullable = false)
-    val id: UUID,
+    @Column(nullable = false, updatable = false)
+    val id: UUID? = null,
 
     @ManyToOne(fetch = LAZY, optional = false)
     val course: Course,

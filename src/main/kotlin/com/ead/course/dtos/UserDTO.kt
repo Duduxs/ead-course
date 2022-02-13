@@ -1,14 +1,11 @@
 package com.ead.course.dtos
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY
 import java.util.UUID
 import javax.validation.constraints.NotBlank
 
 data class UserDTO(
 
-    @JsonProperty(access = READ_ONLY)
-    val id: UUID = UUID.randomUUID(),
+    val id: UUID,
 
     @field:NotBlank
     val username: String,

@@ -26,3 +26,8 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+ead:
+  api:
+    url:
+      authuser: 'http://localhost:8087'
