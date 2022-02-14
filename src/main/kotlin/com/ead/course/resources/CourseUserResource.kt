@@ -55,7 +55,7 @@ class CourseUserResource(
 
         val course = service.findById(courseId)
 
-        val user = client.findById(dto)
+        client.findById(dto)
 
         val courseUser = courseUserService.saveBy(course, dto)
 
