@@ -12,6 +12,7 @@ import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
 import com.ead.course.mappers.updateEntity
 import com.ead.course.repositories.CourseRepository
+import com.ead.course.repositories.CourseUserRepository
 import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
 import mu.KLogger
@@ -31,6 +32,7 @@ class CourseService(
     private val courseRepository: CourseRepository,
     private val moduleRepository: ModuleRepository,
     private val lessonRepository: LessonRepository,
+    private val courseUserRepository: CourseUserRepository,
     private val logger: KLogger,
 ) {
 
@@ -104,8 +106,7 @@ class CourseService(
         logger.end(this::deleteById)
     }
 
-    @Transactional
-    fun delete(course: Course) {
+    private fun delete(course: Course) {
 
         logger.start(this::delete, parameters = arrayOf(course.id))
 
@@ -122,6 +123,13 @@ class CourseService(
                 if (lessons.isNotEmpty()) lessonRepository.deleteAll(lessons)
             }
             moduleRepository.deleteAll(modules)
+        }
+
+        val courseUsers = courseUserRepository.findAllBy(course.id)
+
+        if(courseUsers.isNotEmpty()) {
+            logger.info(this::delete, message = "course users size in course ${courseUsers.size}")
+            courseUserRepository.deleteAll(courseUsers)
         }
 
         courseRepository.delete(course)

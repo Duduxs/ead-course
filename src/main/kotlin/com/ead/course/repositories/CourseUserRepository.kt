@@ -16,4 +16,13 @@ interface CourseUserRepository : JpaRepository<CourseUser, UUID> {
         nativeQuery = true
     )
     fun existsByCourseAndUserId(courseId: UUID, userId: UUID): Boolean
+
+    @Query(
+        """
+            select * from tb_courses_user tcu
+            where tcu.course_id = :courseId
+        """,
+        nativeQuery = true
+    )
+    fun findAllBy(courseId: UUID): Collection<CourseUser>
 }
