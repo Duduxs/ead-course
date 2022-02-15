@@ -1,5 +1,6 @@
 package com.ead.course.services
 
+import com.ead.course.clients.AuthUserClient
 import com.ead.course.core.exceptions.ConflictHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.start
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class CourseUserService(
     private val courseUserRepository: CourseUserRepository,
+    private val client: AuthUserClient,
 ) {
 
     @Transactional
@@ -27,14 +29,15 @@ class CourseUserService(
         val entity = courseDTO.toDomainCourseUser(subscriptionDTO)
             .also { courseUserRepository.save(it) }
 
+        client.subscribeUserInCourse(courseDTO.id, subscriptionDTO.userId)
+
         logger.end(this::saveBy)
 
         return entity
 
     }
 
-    @Transactional(readOnly = true)
-    fun throwIfUserIsAlreadyRegistered(courseDTO: CourseDTO, subscriptionDTO: SubscriptionDTO) {
+    private fun throwIfUserIsAlreadyRegistered(courseDTO: CourseDTO, subscriptionDTO: SubscriptionDTO) {
 
         logger.start(this::throwIfUserIsAlreadyRegistered)
 

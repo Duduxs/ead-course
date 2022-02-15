@@ -23,10 +23,10 @@ class CourseUser(
     @Column(nullable = false, updatable = false)
     val id: UUID? = null,
 
+    @Column(nullable = false)
+    val userId: UUID,
+
     @ManyToOne(fetch = LAZY, optional = false)
     val course: Course,
-
-    @Column(nullable = false)
-    val userId: UUID
 
 )

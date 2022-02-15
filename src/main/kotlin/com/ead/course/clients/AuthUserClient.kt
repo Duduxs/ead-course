@@ -7,6 +7,7 @@ import com.ead.course.core.extensions.inlineContent
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.ResponsePageDTO
 import com.ead.course.dtos.SubscriptionDTO
+import com.ead.course.dtos.UserCourseDTO
 import com.ead.course.dtos.UserDTO
 import com.ead.course.enums.UserStatus.BLOCKED
 import mu.KotlinLogging.logger
@@ -103,6 +104,36 @@ class AuthUserClient(
         } finally {
 
             logger.end(this::findById)
+
+        }
+
+    }
+
+    fun subscribeUserInCourse(courseId: UUID, userId: UUID) {
+
+        val url = "$authUserUri/users/${userId}/courses/subscription"
+
+        logger.start(
+            this::subscribeUserInCourse,
+            message = "Starting ${this::subscribeUserInCourse.name} with url $url",
+            parameters = arrayOf(courseId, userId)
+        )
+
+        try {
+
+            val requestEntity = UserCourseDTO(userId, courseId)
+
+            template.postForObject(url, requestEntity, requestEntity::class.java)
+
+        } catch(e: RuntimeException) {
+
+            logger.error { "Something went wrong: ${e.message}" }
+
+            throw e
+
+        } finally {
+
+            logger.end(this::subscribeUserInCourse)
 
         }
 
