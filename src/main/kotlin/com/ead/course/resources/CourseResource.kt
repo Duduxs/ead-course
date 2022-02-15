@@ -6,6 +6,7 @@ import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.entities.Course
 import com.ead.course.services.CourseService
+import com.ead.course.validations.CourseValidator
 import mu.KLogger
 import net.kaczmarzyk.spring.data.jpa.domain.Equal
 import net.kaczmarzyk.spring.data.jpa.domain.Like
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort.Direction.ASC
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -36,7 +38,8 @@ import javax.validation.Valid
 @CrossOrigin("*", maxAge = 3600)
 class CourseResource(
     private val service: CourseService,
-    private val logger: KLogger
+    private val logger: KLogger,
+    private val validator: CourseValidator
 ) {
 
     @GetMapping("{id}")
@@ -71,18 +74,27 @@ class CourseResource(
     }
 
     @PostMapping
-    fun create(@Valid @RequestBody dto: CourseDTO): ResponseEntity<CourseDTO> = logger.makeLogged(this::create, dto) {
+    fun create(
+        @RequestBody dto: CourseDTO,
+        errors: Errors
+    ): ResponseEntity<Any> = logger.makeLogged(this::create, dto) {
 
-        val entity = service.save(dto)
+        validator.validate(dto, errors)
 
-        val uri = ServletUriComponentsBuilder
-            .fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(entity.id)
-            .toUri()
+        if(errors.hasErrors()) {
+            ResponseEntity.badRequest().body(errors.allErrors)
+        } else {
 
-        ResponseEntity.created(uri).body(entity)
+            val entity = service.save(dto)
 
+            val uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(entity.id)
+                .toUri()
+
+            ResponseEntity.created(uri).body(entity)
+        }
     }
 
     @PutMapping("{id}")
