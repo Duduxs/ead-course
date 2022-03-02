@@ -16,6 +16,7 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpMethod.DELETE
 import org.springframework.http.HttpMethod.GET
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.stereotype.Component
@@ -137,5 +138,32 @@ class AuthUserClient(
 
         }
 
+    }
+
+    fun deleteCourseBy(id: UUID) {
+
+        val url = "$authUserUri/users/courses/$id"
+
+        logger.start(
+            this::deleteCourseBy,
+            message = "Starting ${this::deleteCourseBy.name} with url $url",
+            parameters = arrayOf(id)
+        )
+
+        try {
+
+            template.exchange(url, DELETE, null, Void::class.java)
+
+        } catch(e: RuntimeException) {
+
+            logger.error { "Something went wrong: ${e.message}" }
+
+            throw e
+
+        } finally {
+
+            logger.end(this::deleteCourseBy)
+
+        }
     }
 }

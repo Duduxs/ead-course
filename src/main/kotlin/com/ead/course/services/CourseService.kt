@@ -1,5 +1,6 @@
 package com.ead.course.services
 
+import com.ead.course.clients.AuthUserClient
 import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.info
@@ -33,6 +34,7 @@ class CourseService(
     private val moduleRepository: ModuleRepository,
     private val lessonRepository: LessonRepository,
     private val courseUserRepository: CourseUserRepository,
+    private val authUserClient: AuthUserClient,
     private val logger: KLogger,
 ) {
 
@@ -130,6 +132,8 @@ class CourseService(
         if(courseUsers.isNotEmpty()) {
             logger.info(this::delete, message = "course users size in course ${courseUsers.size}")
             courseUserRepository.deleteAll(courseUsers)
+
+            authUserClient.deleteCourseBy(course.id)
         }
 
         courseRepository.delete(course)

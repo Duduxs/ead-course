@@ -39,6 +39,8 @@ class CourseUserResource(
         @PageableDefault(sort = ["id"], direction = ASC) pageable: Pageable
     ): ResponseEntity<Page<UserDTO>> = logger.makeLogged(this::findAllBy, parameters = arrayOf(courseId)) {
 
+        service.findById(courseId)
+
         val result = client.findAllBy(courseId, pageable)
 
         ResponseEntity.ok(result)
