@@ -2,6 +2,7 @@ package com.ead.course.services
 
 import com.ead.course.clients.AuthUserClient
 import com.ead.course.core.exceptions.ConflictHttpException
+import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
@@ -12,6 +13,7 @@ import com.ead.course.repositories.CourseUserRepository
 import mu.KLogging
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 
 @Service
 class CourseUserService(
@@ -34,6 +36,21 @@ class CourseUserService(
         logger.end(this::saveBy)
 
         return entity
+
+    }
+
+    @Transactional
+    fun deleteBy(userId: UUID) {
+
+        logger.start(this::deleteBy, parameters = arrayOf(userId))
+
+        if (!courseUserRepository.existsByUserId(userId)) {
+            throw NotFoundHttpException("CourseUser not found")
+        }
+
+        courseUserRepository.deleteAllByUserId(userId)
+
+        logger.end(this::deleteBy)
 
     }
 

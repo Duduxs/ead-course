@@ -25,4 +25,8 @@ interface CourseUserRepository : JpaRepository<CourseUser, UUID> {
         nativeQuery = true
     )
     fun findAllBy(courseId: UUID): Collection<CourseUser>
+
+    fun existsByUserId(userId: UUID): Boolean
+
+    fun deleteAllByUserId(userId: UUID)
 }
