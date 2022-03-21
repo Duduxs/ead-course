@@ -1,19 +1,17 @@
 package com.ead.course.services
 
-import com.ead.course.clients.AuthUserClient
 import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.info
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.entities.Course
-import com.ead.course.entities.CourseUser
 import com.ead.course.entities.Module
+import com.ead.course.entities.User
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
 import com.ead.course.mappers.updateEntity
 import com.ead.course.repositories.CourseRepository
-import com.ead.course.repositories.CourseUserRepository
 import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
 import mu.KLogger
@@ -33,8 +31,6 @@ class CourseService(
     private val courseRepository: CourseRepository,
     private val moduleRepository: ModuleRepository,
     private val lessonRepository: LessonRepository,
-    private val courseUserRepository: CourseUserRepository,
-    private val authUserClient: AuthUserClient,
     private val logger: KLogger,
 ) {
 
@@ -52,19 +48,11 @@ class CourseService(
 
         logger.start(this::findAll)
 
-        val spec = Specification { root: Root<Course>, query: CriteriaQuery<*>, cb: CriteriaBuilder ->
-            query.distinct(true)
-            val courseProd: Join<Course, CourseUser> = root.join("courseUsers")
-            cb.equal(courseProd.get<CourseUser>("userId"), userId)
-        }.and(defaultSpec)
+        val result = courseRepository.findAll(defaultSpec, pageable).map { it.toDTO() }
 
         logger.end(this::findAll)
 
-        return if(userId != null) {
-             courseRepository.findAll(spec.and(defaultSpec), pageable).map { it.toDTO() }
-        } else {
-            courseRepository.findAll(defaultSpec, pageable).map { it.toDTO() }
-        }
+        return result
 
     }
 
@@ -125,15 +113,6 @@ class CourseService(
                 if (lessons.isNotEmpty()) lessonRepository.deleteAll(lessons)
             }
             moduleRepository.deleteAll(modules)
-        }
-
-        val courseUsers = courseUserRepository.findAllBy(course.id)
-
-        if(courseUsers.isNotEmpty()) {
-            logger.info(this::delete, message = "course users size in course ${courseUsers.size}")
-            courseUserRepository.deleteAll(courseUsers)
-
-            authUserClient.deleteCourseBy(course.id)
         }
 
         courseRepository.delete(course)

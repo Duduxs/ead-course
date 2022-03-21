@@ -1,22 +1,19 @@
 package com.ead.course.resources
 
-import com.ead.course.clients.AuthUserClient
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.makeLogged
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.SubscriptionDTO
-import com.ead.course.dtos.UserDTO
-import com.ead.course.entities.CourseUser
 import com.ead.course.services.CourseService
-import com.ead.course.services.CourseUserService
+import com.ead.course.services.UserService
 import mu.KLogging
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort.Direction.ASC
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,23 +25,20 @@ import javax.validation.Valid
 
 @RestController
 @CrossOrigin(origins = ["*"], maxAge = 3600)
-class CourseUserResource(
-    private val client: AuthUserClient,
+class UserResource(
     private val service: CourseService,
-    private val courseUserService: CourseUserService,
+    private val courseUserService: UserService,
 ) {
 
     @GetMapping("courses/{courseId}/users")
     fun findAllBy(
         @PathVariable("courseId") courseId: UUID,
         @PageableDefault(sort = ["id"], direction = ASC) pageable: Pageable
-    ): ResponseEntity<Page<UserDTO>> = logger.makeLogged(this::findAllBy, parameters = arrayOf(courseId)) {
+    ): ResponseEntity<Page<Any>> = logger.makeLogged(this::findAllBy, parameters = arrayOf(courseId)) {
 
         service.findById(courseId)
 
-        val result = client.findAllBy(courseId, pageable)
-
-        ResponseEntity.ok(result)
+        ResponseEntity.ok(PageImpl(emptyList()))
 
     }
 
@@ -52,36 +46,21 @@ class CourseUserResource(
     fun subscribeUserInCourse(
         @PathVariable("courseId") courseId: UUID,
         @RequestBody @Valid dto: SubscriptionDTO
-    ): ResponseEntity<CourseUser> {
+    ): ResponseEntity<Any> {
 
         logger.start(this::subscribeUserInCourse, body = dto, parameters = arrayOf(courseId))
 
         val course = service.findById(courseId)
-
-        client.findById(dto)
-
-        val courseUser = courseUserService.saveBy(course, dto)
-
+        //verificação state transfer
         val uri = ServletUriComponentsBuilder
             .fromCurrentRequest()
             .path("/{id}")
-            .buildAndExpand(courseUser.id)
+            .buildAndExpand(UUID.randomUUID())
             .toUri()
 
         logger.end(this::subscribeUserInCourse)
 
-        return ResponseEntity.created(uri).body(courseUser)
-
-    }
-
-    @DeleteMapping("/courses/users/{userId}")
-    fun deleteUserInCourse(
-        @PathVariable("userId") userId: UUID
-    ): ResponseEntity<Unit> = logger.makeLogged(this::deleteUserInCourse) {
-
-        courseUserService.deleteBy(userId)
-
-        ResponseEntity.noContent().build()
+        return ResponseEntity.created(uri).body(listOf<Any>())
 
     }
 

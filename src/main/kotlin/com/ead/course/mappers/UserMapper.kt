@@ -1,14 +1,7 @@
 package com.ead.course.mappers
 
 import com.ead.course.dtos.CourseDTO
-import com.ead.course.dtos.SubscriptionDTO
 import com.ead.course.entities.Course
-import com.ead.course.entities.CourseUser
-
-fun CourseDTO.toDomainCourseUser(subscriptionDTO: SubscriptionDTO) = CourseUser(
-    course = this.toDomain(),
-    userId = subscriptionDTO.userId
-)
 
 fun CourseDTO.toDomain() = Course(
     id = this.id,
