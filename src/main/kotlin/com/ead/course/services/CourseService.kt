@@ -7,7 +7,6 @@ import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.entities.Course
 import com.ead.course.entities.Module
-import com.ead.course.entities.User
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
 import com.ead.course.mappers.updateEntity
@@ -21,10 +20,6 @@ import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.CriteriaQuery
-import javax.persistence.criteria.Join
-import javax.persistence.criteria.Root
 
 @Service
 class CourseService(
