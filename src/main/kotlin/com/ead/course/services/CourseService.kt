@@ -7,6 +7,7 @@ import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.entities.Course
 import com.ead.course.entities.Module
+import com.ead.course.entities.User
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
 import com.ead.course.mappers.updateEntity
@@ -20,6 +21,11 @@ import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
+import javax.persistence.criteria.CriteriaBuilder
+import javax.persistence.criteria.CriteriaQuery
+import javax.persistence.criteria.Expression
+import javax.persistence.criteria.Join
+import javax.persistence.criteria.Root
 
 @Service
 class CourseService(
@@ -43,11 +49,20 @@ class CourseService(
 
         logger.start(this::findAll)
 
-        val result = courseRepository.findAll(defaultSpec, pageable).map { it.toDTO() }
+        val spec = Specification { root: Root<Course>, query: CriteriaQuery<*>, cb: CriteriaBuilder ->
+            query.distinct(true)
+            val user: Root<User> = query.from(User::class.java)
+            val usersCourses: Expression<Collection<Course>> = user.get("courses")
+            cb.and(cb.equal(user.get<Root<User>>("userId"), userId), cb.isMember(root, usersCourses))
+        }.and(defaultSpec)
 
         logger.end(this::findAll)
 
-        return result
+        return if(userId != null) {
+            courseRepository.findAll(spec, pageable).map { it.toDTO() }
+        } else {
+            courseRepository.findAll(defaultSpec, pageable).map { it.toDTO() }
+        }
 
     }
 

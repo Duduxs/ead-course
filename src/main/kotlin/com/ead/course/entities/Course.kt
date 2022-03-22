@@ -12,9 +12,13 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType.STRING
 import javax.persistence.Enumerated
+import javax.persistence.FetchType.LAZY
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType.AUTO
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 import javax.persistence.Table
 
@@ -50,4 +54,12 @@ class Course(
     @Fetch(SUBSELECT)
     val modules: Set<Module> = HashSet(),
 
-    ) : Auditable()
+    @field:JsonProperty(access = WRITE_ONLY)
+    @ManyToMany(fetch = LAZY)
+    @JoinTable(name = "tb_courses_users",
+        joinColumns = [JoinColumn(name = "course_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    private val users: Set<User> = HashSet()
+
+) : Auditable()
