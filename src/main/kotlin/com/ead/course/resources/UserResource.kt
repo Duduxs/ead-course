@@ -5,7 +5,6 @@ import com.ead.course.core.extensions.makeLogged
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.SubscriptionDTO
 import com.ead.course.dtos.UserDTO
-import com.ead.course.entities.Course
 import com.ead.course.entities.User
 import com.ead.course.services.CourseService
 import com.ead.course.services.UserService
@@ -15,7 +14,6 @@ import net.kaczmarzyk.spring.data.jpa.domain.Like
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort.Direction.ASC
 import org.springframework.data.jpa.domain.Specification

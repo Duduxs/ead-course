@@ -58,7 +58,7 @@ dependencies {
         "net.kaczmarzyk:specification-arg-resolver:2.6.2"
     )
 
-    runtimeOnly("org.postgresql:postgresql:42.2.24")
+    runtimeOnly("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

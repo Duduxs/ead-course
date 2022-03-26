@@ -1,5 +1,6 @@
 package com.ead.course.entities
 
+import com.ead.course.core.entities.Auditable
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY
 import java.util.UUID
@@ -40,4 +41,4 @@ class User(
     @ManyToMany(mappedBy = "users", fetch = LAZY)
     val courses: Set<Course> = HashSet()
 
-)
+) : Auditable()
