@@ -21,7 +21,8 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
-
+  rabbitmq:
+    addresses: amqps://yyvtpqtx:w9iD5s6UIvyd7CL5mHka5uuA31dtOIL6@chimpanzee.rmq.cloudamqp.com/yyvtpqtx
 logging:
   level:
     org:

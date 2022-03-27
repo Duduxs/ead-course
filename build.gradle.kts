@@ -48,6 +48,7 @@ dependencies {
         "org.springframework.boot:spring-boot-starter-web",
         "org.springframework.boot:spring-boot-starter-data-jpa",
         "org.springframework.boot:spring-boot-starter-validation",
+        "org.springframework.boot:spring-boot-starter-amqp",
         "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client",
 
         "com.fasterxml.jackson.module:jackson-module-kotlin",
