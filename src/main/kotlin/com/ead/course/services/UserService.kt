@@ -1,5 +1,6 @@
 package com.ead.course.services
 
+import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.UserDTO
@@ -23,6 +24,19 @@ import javax.persistence.criteria.Root
 class UserService(
     private val repository: UserRepository,
 ) {
+
+    @Transactional(readOnly = true)
+    fun findById(id: UUID): User {
+
+        logger.start(this::findById, parameters = arrayOf(id))
+
+        val entity = repository.findById(id)
+            .orElseThrow { NotFoundHttpException("User with id $id not found") }
+
+        logger.end(this::findById)
+
+        return entity
+    }
 
     @Transactional(readOnly = true)
     fun findAll(
@@ -49,7 +63,7 @@ class UserService(
     @Transactional
     fun save(user: User): User {
 
-        logger.start(this::save, message = "Begging to save user with cpf ${user.cpf}")
+        logger.start(this::save, message = "Begging to save/update user with cpf ${user.cpf}")
 
         val savedEntity = repository.save(user)
 
@@ -59,6 +73,18 @@ class UserService(
 
     }
 
+    @Transactional
+    fun deleteBy(id: UUID) {
+
+        logger.start(this::deleteBy, parameters = arrayOf(id))
+
+        val user = findById(id)
+
+        repository.delete(user)
+
+        logger.end(this::deleteBy)
+
+    }
 
     companion object : KLogging()
 }

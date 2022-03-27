@@ -2,6 +2,8 @@ package com.ead.course.consumers
 
 import com.ead.course.dtos.UserEventDTO
 import com.ead.course.enums.ActionType.CREATE
+import com.ead.course.enums.ActionType.DELETE
+import com.ead.course.enums.ActionType.UPDATE
 import com.ead.course.enums.ActionType.valueOf
 import com.ead.course.mappers.toDomain
 import com.ead.course.services.UserService
@@ -34,10 +36,8 @@ class UserConsumer(
         val entity = dto.toDomain()
 
         when(valueOf(dto.actionType)) {
-
-            CREATE -> service.save(entity)
-            else -> throw IllegalArgumentException("Operation not mapped!")
-
+            CREATE, UPDATE -> service.save(entity)
+            DELETE -> service.deleteBy(entity.id)
         }
 
     }
