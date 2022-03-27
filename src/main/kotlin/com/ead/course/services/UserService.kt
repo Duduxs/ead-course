@@ -21,7 +21,7 @@ import javax.persistence.criteria.Root
 
 @Service
 class UserService(
-    private val userRepository: UserRepository,
+    private val repository: UserRepository,
 ) {
 
     @Transactional(readOnly = true)
@@ -42,7 +42,20 @@ class UserService(
 
         logger.end(this::findAll)
 
-        return userRepository.findAll(spec, pageable).map { it.toDTO() }
+        return repository.findAll(spec, pageable).map { it.toDTO() }
+
+    }
+
+    @Transactional
+    fun save(user: User): User {
+
+        logger.start(this::save, message = "Begging to save user with cpf ${user.cpf}")
+
+        val savedEntity = repository.save(user)
+
+        logger.end(this::save)
+
+        return savedEntity
 
     }
 

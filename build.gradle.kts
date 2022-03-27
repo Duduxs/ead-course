@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.builtins.StandardNames.FqNames.annotation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -9,6 +10,7 @@ plugins {
     kotlin("plugin.jpa") version "1.4.32"
     kotlin("plugin.spring") version "1.6.0"
     kotlin("plugin.allopen") version "1.4.31"
+    kotlin("plugin.noarg") version "1.6.10"
 }
 
 group = "com.ead"
@@ -41,6 +43,10 @@ tasks {
 
 allOpen {
     annotation("javax.persistence.Entity")
+}
+
+noArg {
+    annotation("com.ead.course.core.annotations.NoArg")
 }
 
 dependencies {
