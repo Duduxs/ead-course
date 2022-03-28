@@ -23,14 +23,34 @@ interface CourseRepository : JpaRepository<Course, UUID>, JpaSpecificationExecut
     )
     fun existsBy(courseId: UUID, userId: UUID): Boolean
 
-
     @Query(
         value =
-            """
-                insert into tb_courses_users values (:courseId, :userId)  
-            """,
+        """
+            insert into tb_courses_users values (:courseId, :userId)  
+        """,
         nativeQuery = true
     )
     @Modifying
     fun saveUserInCourse(courseId: UUID, userId: UUID)
+
+
+    @Query(
+        value =
+        """
+            delete from tb_courses_users where course_id = :courseId
+        """,
+        nativeQuery = true
+    )
+    @Modifying
+    fun deleteCourseUserByCourseId(courseId: UUID)
+
+    @Query(
+        value =
+        """
+            delete from tb_courses_users where user_id = :userId
+        """,
+        nativeQuery = true
+    )
+    @Modifying
+    fun deleteCourseUserByUserId(userId: UUID)
 }

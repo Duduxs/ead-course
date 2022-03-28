@@ -130,6 +130,8 @@ class CourseService(
             moduleRepository.deleteAll(modules)
         }
 
+        courseRepository.deleteCourseUserByCourseId(course.id)
+
         courseRepository.delete(course)
 
         logger.end(this::delete)

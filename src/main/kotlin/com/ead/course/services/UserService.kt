@@ -9,6 +9,7 @@ import com.ead.course.entities.Course
 import com.ead.course.entities.User
 import com.ead.course.enums.UserStatus.BLOCKED
 import com.ead.course.mappers.toDTO
+import com.ead.course.repositories.CourseRepository
 import com.ead.course.repositories.UserRepository
 import mu.KLogging
 import org.springframework.data.domain.Page
@@ -25,6 +26,7 @@ import javax.persistence.criteria.Root
 @Service
 class UserService(
     private val repository: UserRepository,
+    private val courseRepository: CourseRepository
 ) {
 
     fun findByIdOrNull(id: UUID): User? = repository.findById(id).orElse(null)
@@ -82,6 +84,8 @@ class UserService(
         logger.start(this::deleteBy, parameters = arrayOf(id))
 
         val user = findById(id)
+
+        courseRepository.deleteCourseUserByUserId(id)
 
         repository.delete(user)
 
