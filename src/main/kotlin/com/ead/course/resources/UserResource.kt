@@ -29,6 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.util.UUID
 import javax.validation.Valid
 
+
 @RestController
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 class UserResource(
@@ -55,7 +56,6 @@ class UserResource(
         ResponseEntity.ok(response)
 
     }
-
 
     @PostMapping("courses/{courseId}/users/subscription")
     fun subscribeUserInCourse(

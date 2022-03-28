@@ -54,7 +54,7 @@ class UserService(
             query.distinct(true)
             val course: Root<Course> = query.from(Course::class.java)
             val coursesUsers: Expression<Collection<User>> = course.get("users")
-            cb.and(cb.equal(course.get<Root<User>>("courseId"), courseId), cb.isMember(root, coursesUsers))
+            cb.and(cb.equal(course.get<Root<User>>("id"), courseId), cb.isMember(root, coursesUsers))
         }.and(defaultSpec)
 
         logger.end(this::findAll)
