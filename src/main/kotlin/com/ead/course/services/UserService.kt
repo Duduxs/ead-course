@@ -1,11 +1,13 @@
 package com.ead.course.services
 
+import com.ead.course.core.exceptions.ForbiddenHttpException
 import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.UserDTO
 import com.ead.course.entities.Course
 import com.ead.course.entities.User
+import com.ead.course.enums.UserStatus.BLOCKED
 import com.ead.course.mappers.toDTO
 import com.ead.course.repositories.UserRepository
 import mu.KLogging
@@ -25,13 +27,14 @@ class UserService(
     private val repository: UserRepository,
 ) {
 
+    fun findByIdOrNull(id: UUID): User? = repository.findById(id).orElse(null)
+
     @Transactional(readOnly = true)
     fun findById(id: UUID): User {
 
         logger.start(this::findById, parameters = arrayOf(id))
 
-        val entity = repository.findById(id)
-            .orElseThrow { NotFoundHttpException("User with id $id not found") }
+        val entity = findByIdOrNull(id) ?: throw NotFoundHttpException("User with id $id not found")
 
         logger.end(this::findById)
 
@@ -84,6 +87,11 @@ class UserService(
 
         logger.end(this::deleteBy)
 
+    }
+
+    fun throwIfUserIsBlocked(user: User) {
+        if (user.status == BLOCKED.name)
+            throw ForbiddenHttpException("User is blocked")
     }
 
     companion object : KLogging()

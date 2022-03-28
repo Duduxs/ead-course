@@ -56,25 +56,40 @@ class UserResource(
 
     }
 
+
     @PostMapping("courses/{courseId}/users/subscription")
     fun subscribeUserInCourse(
         @PathVariable("courseId") courseId: UUID,
         @RequestBody @Valid dto: SubscriptionDTO
-    ): ResponseEntity<Any> {
+    ): ResponseEntity<Void> {
 
         logger.start(this::subscribeUserInCourse, body = dto, parameters = arrayOf(courseId))
 
         val course = service.findById(courseId)
-        //verificação state transfer
+
+        service.throwIfSubscriptionAlreadyExists(
+            courseId = courseId,
+            userId = dto.userId
+        )
+
+        val user = userService.findById(dto.userId)
+
+        userService.throwIfUserIsBlocked(user)
+
+        service.subscribeUserInCourse(
+            courseId = courseId,
+            userId = dto.userId
+        )
+
         val uri = ServletUriComponentsBuilder
             .fromCurrentRequest()
             .path("/{id}")
-            .buildAndExpand(UUID.randomUUID())
+            .buildAndExpand(course.id)
             .toUri()
 
         logger.end(this::subscribeUserInCourse)
 
-        return ResponseEntity.created(uri).body(listOf<Any>())
+        return ResponseEntity.created(uri).build()
 
     }
 

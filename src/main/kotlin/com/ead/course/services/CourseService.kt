@@ -1,5 +1,6 @@
 package com.ead.course.services
 
+import com.ead.course.core.exceptions.ConflictHttpException
 import com.ead.course.core.exceptions.NotFoundHttpException
 import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.info
@@ -24,7 +25,6 @@ import java.util.UUID
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Expression
-import javax.persistence.criteria.Join
 import javax.persistence.criteria.Root
 
 @Service
@@ -53,12 +53,12 @@ class CourseService(
             query.distinct(true)
             val user: Root<User> = query.from(User::class.java)
             val usersCourses: Expression<Collection<Course>> = user.get("courses")
-            cb.and(cb.equal(user.get<Root<User>>("userId"), userId), cb.isMember(root, usersCourses))
+            cb.and(cb.equal(user.get<Root<User>>("id"), userId), cb.isMember(root, usersCourses))
         }.and(defaultSpec)
 
         logger.end(this::findAll)
 
-        return if(userId != null) {
+        return if (userId != null) {
             courseRepository.findAll(spec, pageable).map { it.toDTO() }
         } else {
             courseRepository.findAll(defaultSpec, pageable).map { it.toDTO() }
@@ -76,6 +76,11 @@ class CourseService(
         logger.end(this::save, entity)
 
         return entity
+    }
+
+    @Transactional
+    fun subscribeUserInCourse(courseId: UUID, userId: UUID) {
+        courseRepository.saveUserInCourse(courseId, userId)
     }
 
     @Transactional
@@ -129,4 +134,16 @@ class CourseService(
 
         logger.end(this::delete)
     }
+
+    fun throwIfSubscriptionAlreadyExists(courseId: UUID, userId: UUID) {
+        val exists = courseRepository.existsBy(
+            courseId = courseId,
+            userId = userId
+        )
+
+        if (exists) {
+            throw ConflictHttpException("User is already enrolled in the course")
+        }
+    }
+
 }
