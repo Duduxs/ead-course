@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.builtins.StandardNames.FqNames.annotation
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -55,7 +54,9 @@ dependencies {
         "org.springframework.boot:spring-boot-starter-data-jpa",
         "org.springframework.boot:spring-boot-starter-validation",
         "org.springframework.boot:spring-boot-starter-amqp",
+        "org.springframework.boot:spring-boot-starter-actuator",
         "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client",
+        "org.springframework.cloud:spring-cloud-starter-config",
 
         "com.fasterxml.jackson.module:jackson-module-kotlin",
         "org.jetbrains.kotlin:kotlin-reflect",
