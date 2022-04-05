@@ -6,6 +6,7 @@ import com.ead.course.core.extensions.start
 import com.ead.course.dtos.SubscriptionDTO
 import com.ead.course.dtos.UserDTO
 import com.ead.course.entities.User
+import com.ead.course.mappers.toDTO
 import com.ead.course.services.CourseService
 import com.ead.course.services.UserService
 import mu.KLogging
@@ -80,6 +81,8 @@ class UserResource(
             courseId = courseId,
             userId = dto.userId
         )
+
+        service.sendNotification(course, user)
 
         val uri = ServletUriComponentsBuilder
             .fromCurrentRequest()

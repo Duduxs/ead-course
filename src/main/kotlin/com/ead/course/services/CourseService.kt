@@ -6,12 +6,15 @@ import com.ead.course.core.extensions.end
 import com.ead.course.core.extensions.info
 import com.ead.course.core.extensions.start
 import com.ead.course.dtos.CourseDTO
+import com.ead.course.dtos.NotificationCommandDTO
+import com.ead.course.dtos.UserDTO
 import com.ead.course.entities.Course
 import com.ead.course.entities.Module
 import com.ead.course.entities.User
 import com.ead.course.mappers.toDTO
 import com.ead.course.mappers.toDomain
 import com.ead.course.mappers.updateEntity
+import com.ead.course.publishers.NotificationCommandPublisher
 import com.ead.course.repositories.CourseRepository
 import com.ead.course.repositories.LessonRepository
 import com.ead.course.repositories.ModuleRepository
@@ -33,6 +36,7 @@ class CourseService(
     private val moduleRepository: ModuleRepository,
     private val lessonRepository: LessonRepository,
     private val logger: KLogger,
+    private val publisher: NotificationCommandPublisher
 ) {
 
     @Transactional(readOnly = true)
@@ -80,7 +84,34 @@ class CourseService(
 
     @Transactional
     fun subscribeUserInCourse(courseId: UUID, userId: UUID) {
+
+        logger.start(this::subscribeUserInCourse, parameters = arrayOf(courseId, userId))
+
         courseRepository.saveUserInCourse(courseId, userId)
+
+        logger.end(this::subscribeUserInCourse)
+    }
+
+    fun sendNotification(course: CourseDTO, user: User) {
+
+        try {
+
+            logger.start(this::sendNotification, parameters = arrayOf(course, user))
+
+            val dto = NotificationCommandDTO(
+                title = "Welcome to the course : ${course.name}",
+                message =  "${user.fullName}, your subscription was successfully done.",
+                userId = user.id
+            )
+
+            publisher.publish(dto)
+
+        } catch (e: RuntimeException) {
+           logger.error { "Something went wrong: ${e.message}" }
+        } finally {
+            logger.end(this::sendNotification)
+        }
+
     }
 
     @Transactional
