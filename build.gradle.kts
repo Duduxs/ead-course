@@ -57,6 +57,10 @@ dependencies {
         "org.springframework.boot:spring-boot-starter-actuator",
         "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client",
         "org.springframework.cloud:spring-cloud-starter-config",
+        "org.springframework.boot:spring-boot-starter-security",
+
+        "io.jsonwebtoken:jjwt:0.9.1",
+        "org.glassfish.jaxb:jaxb-runtime",
 
         "com.fasterxml.jackson.module:jackson-module-kotlin",
         "org.jetbrains.kotlin:kotlin-reflect",

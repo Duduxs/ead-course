@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort.Direction.ASC
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -36,6 +37,7 @@ class LessonResource(
 ) {
 
     @GetMapping("lessons/{lessonId}")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     fun findById(
         @PathVariable lessonId: UUID
     ): ResponseEntity<LessonDTO> = logger.makeLogged(function = this::findById, parameters = arrayOf(lessonId)) {
@@ -47,6 +49,7 @@ class LessonResource(
     }
 
     @GetMapping("/modules/{moduleId}/lessons")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     fun findAllInModules(
         @And(
             Spec(path = "title", spec = Like::class)
@@ -66,6 +69,7 @@ class LessonResource(
     }
 
     @PostMapping("modules/{moduleId}/lessons")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     fun create(@PathVariable moduleId: UUID, @Valid @RequestBody dto: LessonDTO): ResponseEntity<LessonDTO> {
 
         logger.start(this::create, dto, parameters = arrayOf(moduleId))
@@ -85,6 +89,7 @@ class LessonResource(
     }
 
     @PutMapping("lessons/{lessonId}")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     fun update(
         @PathVariable lessonId: UUID,
         @Valid @RequestBody dto: LessonDTO
@@ -101,6 +106,7 @@ class LessonResource(
     }
 
     @DeleteMapping("lessons/{lessonId}")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     fun delete(
         @PathVariable lessonId: UUID
     ): ResponseEntity<Void> = logger.makeLogged(function = this::delete, parameters = arrayOf(lessonId)) {

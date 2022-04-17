@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort.Direction.ASC
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -43,6 +44,7 @@ class CourseResource(
 ) {
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     fun findById(@PathVariable id: UUID): ResponseEntity<CourseDTO> =
         logger.makeLogged(function = this::findById, parameters = arrayOf(id)) {
 
@@ -53,6 +55,7 @@ class CourseResource(
         }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('STUDENT')")
     fun findAll(
         @And(
             Spec(path = "name", spec = Like::class),
@@ -74,6 +77,7 @@ class CourseResource(
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     fun create(
         @RequestBody dto: CourseDTO,
         errors: Errors
@@ -98,6 +102,7 @@ class CourseResource(
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     fun update(@Valid @RequestBody dto: CourseDTO, @PathVariable id: UUID): ResponseEntity<CourseDTO> {
 
         logger.start(this::update, body = dto, parameters = arrayOf(id))
@@ -111,6 +116,7 @@ class CourseResource(
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     fun delete(@PathVariable id: UUID): ResponseEntity<Void> {
 
         logger.start(this::delete, parameters = arrayOf(id))
