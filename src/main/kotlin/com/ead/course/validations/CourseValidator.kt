@@ -1,8 +1,10 @@
 package com.ead.course.validations
 
+import com.ead.course.configurations.security.AuthenticationCurrentUserService
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.enums.UserType.STUDENT
 import com.ead.course.services.UserService
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Component
 import org.springframework.validation.Errors
 import org.springframework.validation.Validator
@@ -11,7 +13,8 @@ import java.util.UUID
 @Component
 class CourseValidator(
     private val validator: Validator,
-    private val service: UserService
+    private val service: UserService,
+    private val authenticationService: AuthenticationCurrentUserService
 ) : Validator {
 
     override fun supports(clazz: Class<*>) = false
@@ -29,6 +32,10 @@ class CourseValidator(
     }
 
     private fun validateInstructor(instructorId: UUID, errors: Errors) {
+
+        val currentUserID = authenticationService.currentUser.id
+
+        if(instructorId != currentUserID) throw AccessDeniedException("Forbidden")
 
         val instructor = service.findByIdOrNull(instructorId)
 
