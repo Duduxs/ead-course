@@ -6,7 +6,6 @@ import com.ead.course.core.extensions.start
 import com.ead.course.dtos.SubscriptionDTO
 import com.ead.course.dtos.UserDTO
 import com.ead.course.entities.User
-import com.ead.course.mappers.toDTO
 import com.ead.course.services.CourseService
 import com.ead.course.services.UserService
 import mu.KLogging
@@ -20,6 +19,7 @@ import org.springframework.data.domain.Sort.Direction.ASC
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -39,6 +39,7 @@ class UserResource(
 ) {
 
     @GetMapping("courses/{courseId}/users")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR')")
     fun findAllBy(
         @And(
             Spec(path = "email", spec = Like::class),
@@ -59,6 +60,7 @@ class UserResource(
     }
 
     @PostMapping("courses/{courseId}/users/subscription")
+    @PreAuthorize("hasAnyRole('STUDENT')")
     fun subscribeUserInCourse(
         @PathVariable("courseId") courseId: UUID,
         @RequestBody @Valid dto: SubscriptionDTO
