@@ -35,14 +35,13 @@ tasks {
         }
     }
 
-    withType<Jar> {
-        manifest {
-            attributes["Main-Class"] = "com.ead.course.CourseApplication"
-        }
-    }
     withType<Test> {
         useJUnitPlatform()
     }
+}
+
+springBoot {
+    mainClass.set("com.ead.course.CourseApplicationKt")
 }
 
 allOpen {
