@@ -35,6 +35,11 @@ tasks {
         }
     }
 
+    withType<Jar> {
+        manifest {
+            attributes["Main-Class"] = "com.ead.course.CourseApplication"
+        }
+    }
     withType<Test> {
         useJUnitPlatform()
     }
