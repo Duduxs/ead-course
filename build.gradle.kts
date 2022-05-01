@@ -48,6 +48,12 @@ noArg {
     annotation("com.ead.course.core.annotations.NoArg")
 }
 
+configurations {
+    all {
+        exclude("org.springframework.boot", "spring-boot-starter-logging")
+    }
+}
+
 dependencies {
     implementations(
         "org.springframework.boot:spring-boot-starter-web",
@@ -58,6 +64,8 @@ dependencies {
         "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client",
         "org.springframework.cloud:spring-cloud-starter-config",
         "org.springframework.boot:spring-boot-starter-security",
+        "org.springframework.boot:spring-boot-starter-log4j2",
+        "co.elastic.logging:log4j2-ecs-layout:1.3.2",
 
         "io.jsonwebtoken:jjwt:0.9.1",
         "org.glassfish.jaxb:jaxb-runtime",
