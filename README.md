@@ -64,7 +64,7 @@ $ git clone https://github.com/Duduxs/ead-config-server-repo
 To run course:
 
 ```bash
-# Execute the main class AuthuserApplication with dev profile (Be sure to have already service registry and config server up) 
+# Execute the main class CourseApplication with dev profile (Be sure to have already service registry and config server up) 
 ```
 
 ## :thumbsup: How To Contribute
@@ -76,9 +76,6 @@ To run course:
 
 ## :memo: License
 This project is under the MIT license. See the [LICENSE](https://github.com/Duduxs/ead-course/blob/main/LICENSE) for more information.
-
-
----
 
 ## :handshake: Ead Ecosystem
 Take a look into others microservices that were developed for the EAD Plataform.
