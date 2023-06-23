@@ -17,7 +17,7 @@ class RabbitMQConfig(
         .also { it.messageConverter = messageConverter() }
 
     @Bean
-    fun messageConverter(): Jackson2JsonMessageConverter {
+   fun messageConverter(): Jackson2JsonMessageConverter {
         val mapper = ObjectMapper()
             .registerModule(JavaTimeModule())
 

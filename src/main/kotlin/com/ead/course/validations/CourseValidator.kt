@@ -3,6 +3,7 @@ package com.ead.course.validations
 import com.ead.course.configurations.security.AuthenticationCurrentUserService
 import com.ead.course.dtos.CourseDTO
 import com.ead.course.enums.UserType.STUDENT
+import com.ead.course.enums.UserType.USER
 import com.ead.course.services.UserService
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Component
@@ -35,7 +36,7 @@ class CourseValidator(
 
         val currentUserID = authenticationService.currentUser.id
 
-        if(instructorId != currentUserID) throw AccessDeniedException("Forbidden")
+        if (instructorId != currentUserID) throw AccessDeniedException("Forbidden")
 
         val instructor = service.findByIdOrNull(instructorId)
 
@@ -45,11 +46,11 @@ class CourseValidator(
                 "UserNotFound",
                 "User couldn't be found"
             )
-        } else if (instructor.type == STUDENT.name) {
+        } else if (instructor.type == STUDENT.name || instructor.type == USER.name) {
             errors.rejectValue(
                 CourseDTO::instructorId.name,
                 "UserForbidden",
-                "Students can't create a course"
+                "Students or users can't create a course"
             )
         }
     }
